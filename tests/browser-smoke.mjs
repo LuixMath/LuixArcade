@@ -66,7 +66,7 @@ async function run(){
   await send('Runtime.enable');
   await viewport(1280,800,false);
   await visit(local);
-  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Ideias")'));
+  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Jogos")'));
   await ensure('No placeholder project cards',await evaluate('document.querySelectorAll(".project-card").length===0'));
   await ensure('Desktop has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
   await screenshot('desktop-home');
