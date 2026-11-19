@@ -44,18 +44,37 @@ test('Static build renders all three languages without mock projects',async()=>{
   const pages=['index.html','catalogo/index.html','sobre/index.html','en/index.html','en/catalog/index.html','en/about/index.html','es/index.html','es/catalogo/index.html','es/acerca/index.html','404.html'];
   for(const page of pages){
     const html=await load(page);
-    assert.match(html,/<main id="main">/);
+    assert.match(html,/<main id="main"/);
     assert.match(html,/Content-Security-Policy/);
     assert.match(html,/Luix Arcade/);
     assert.match(html,/href="\/LuixArcade\/styles.css"/);
     assert.doesNotMatch(html,/data-project-item/);
     assert.doesNotMatch(html,/project-card/);
   }
-  assert.match(await load('en/index.html'),/No projects published yet/);
-  assert.match(await load('es/index.html'),/Todavía no hay proyectos publicados/);
-  assert.match(await load('index.html'),/Ainda não há projetos publicados/);
+  assert.match(await load('en/index.html'),/Nothing available to download yet/);
+  assert.match(await load('es/index.html'),/Todavía no hay versiones para descargar/);
+  assert.match(await load('index.html'),/Ainda não há lançamentos para baixar/);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
   assert.match(await load('sitemap.xml'),/LuixArcade\/es\/acerca/);
   assert.match(await load('robots.txt'),/sitemap.xml/);
+});
+
+test('Preview project editions remain separate from empty public catalog', async()=>{
+  await build();
+  for(const [locale,prefix] of [['pt-BR',''],['en','en/'],['es','es/']]){
+    const type=locale==='en'?'project':locale==='es'?'proyecto':'projeto';
+    for(const slug of ['crystal3ds','ocarina-of-time-3d-echoes']){
+      const html=await load(prefix+type+'/'+slug+'/index.html');
+      assert.match(html,/noindex,follow/);
+      assert.match(html,/class="edition edition-/);
+      assert.match(html,/media\/previews\//);
+      assert.match(html,/Nintendo 3DS/);
+      assert.doesNotMatch(html,/releases\/download/);
+      assert.doesNotMatch(html,/data-project-item/);
+    }
+  }
+  const catalog=await load('catalogo/index.html');
+  assert.doesNotMatch(catalog,/data-project-item/);
+  assert.match(catalog,/data-catalog-form/);
 });

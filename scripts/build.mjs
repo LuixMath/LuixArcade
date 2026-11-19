@@ -2,6 +2,8 @@ import {readFile, mkdir, writeFile, cp} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {copy, locales} from '../content/i18n.mjs';
+import {editorial,previewProjects} from '../content/editorial.mjs';
+import {renderHome,renderPreview,renderCategoryShelf} from './storefront.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'dist');
@@ -89,7 +91,7 @@ export {projectValidate, esc};
 
 function route(lang,page,slug=''){
   const prefix = lang==='pt-BR' ? '' : lang+'/';
-  const fragment = page==='home'?'':page==='catalog'?(lang==='en'?'catalog/':'catalogo/'):page==='about'?(lang==='en'?'about/':lang==='es'?'acerca/':'sobre/'):page==='project'?(lang==='en'?'project/':lang==='es'?'proyecto/':'projeto/')+slug+'/':'';
+  const fragment = page==='home'?'':page==='catalog'?(lang==='en'?'catalog/':'catalogo/'):page==='about'?(lang==='en'?'about/':lang==='es'?'acerca/':'sobre/'):['project','preview'].includes(page)?(lang==='en'?'project/':lang==='es'?'proyecto/':'projeto/')+slug+'/':'';
   return BASE+prefix+fragment;
 }
 function link(lang,page,slug='') {return route(lang,page,slug);}
@@ -113,24 +115,28 @@ function storeRail(lang,page,t){
     '<div class="rail-separator"></div><a class="rail-link" href="'+esc(link(lang,'about'))+'" '+(page==='about'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('heart')+'</span>'+esc(t.nav.about)+'</a></nav>'+
     '<p class="rail-footnote">'+esc(t.store.railFootnote)+'</p></aside>';
 }
-function appShell(lang,page,t,content){
-  return '<main id="main"><div class="site-shell app-shell">'+storeRail(lang,page,t)+'<div class="store-main">'+content+'</div></div></main>';
+function appShell(lang,page,t,content) {
+  return '<main id="main"><div class="site-shell store-page">'+content+'</div></main>';
 }
+
 function mobileDock(lang,page,t){
   return '<nav class="mobile-dock" aria-label="'+esc(t.nav.categories)+'"><div class="mobile-dock-inner">'+
-  [['home','game'],['catalog','box'],['about','heart']].map(([id,sym])=>
-    '<a href="'+esc(link(lang,id))+'" '+(id===page?'aria-current="page"':'')+'>'+icon(sym)+'<span>'+esc(t.nav[id])+'</span></a>').join('')+
+    [['home','game'],['catalog','box'],['about','heart']].map(([id,sym])=>
+      '<a href="'+esc(link(lang,id))+'" '+(id===page?'aria-current="page"':'')+'>'+icon(sym)+'<span>'+esc(t.nav[id])+'</span></a>').join('')+
     '</div></nav>';
 }
-function header(lang,page,slug,t){
+
+function header(lang,page,slug,t) {
+  const u=editorial[lang];
   return '<header class="site-header"><div class="site-shell header-inner">'+
-    '<a class="wordmark" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><span class="brand-type">luix<span class="brand-dot">.</span></span><span class="brand-second">arcade</span></a>'+
+    '<a class="wordmark" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><span class="brand-type">Luix</span><span class="brand-second">Arcade</span></a>'+
     '<nav class="desktop-nav" aria-label="'+esc(t.nav.categories)+'">'+['home','catalog','about'].map(id=>
-    '<a class="nav-item '+(id===page?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(id===page?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
+      '<a class="nav-item '+(page===id?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(page===id?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
     '<div class="header-tools"><a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+'<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
     '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
     localeSelector(lang,page,slug,t)+'</div></div></header>';
 }
+
 function footer(lang,t){
   return '<footer class="site-footer"><div class="site-shell"><div class="footer-upper"><div class="footer-brand"><span class="footer-mark">'+icon('sparkle')+'</span><div><strong>Luix Arcade</strong><p>'+esc(t.footer.tagline)+'</p></div></div><nav aria-label="'+esc(t.nav.categories)+'"><a href="'+esc(link(lang,'catalog'))+'">'+esc(t.footer.browse)+'</a><a href="'+esc(link(lang,'about'))+'">'+esc(t.footer.about)+'</a><a href="https://github.com/LuixMath" target="_blank" rel="noopener noreferrer">'+esc(t.footer.github)+icon('external')+'</a></nav></div><div class="footer-bottom"><span>© '+new Date().getUTCFullYear()+' Luix Arcade · '+esc(t.footer.rights)+'</span><span>'+esc(t.footer.notice)+'</span></div></div></footer>';
 }
@@ -157,37 +163,9 @@ function emptyBanner(lang,t,kind='home'){
     (atHome?'<a class="shelf-about-link" href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a>':'')+'</div>';
 }
 function home(lang,projects,t){
-  const featured=projects.filter(p=>p.featured).slice(0,6);
-  const latest=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,6);
-  const devices=['3ds','pc','ps2','xbox360','web'];
-  return appShell(lang,'home',t,
-    '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
-    '<section class="editorial-grid" aria-label="'+esc(t.home.eyebrow)+'">'+
-    '<div class="editorial-main"><div class="editorial-copy"><span class="editorial-kicker">'+esc(t.home.eyebrow)+'</span>'+
-    '<h1>'+esc(t.home.heading)+' <em>'+esc(t.home.accent)+'</em></h1><p>'+esc(t.home.description)+'</p>'+
-    '<a class="editorial-cta" href="'+esc(link(lang,'catalog'))+'">'+esc(t.home.heroCta)+' '+icon('arrow')+'</a></div>'+
-    '<div class="editorial-art" aria-hidden="true"><img src="'+BASE+'arcade-feature.svg" width="480" height="440" alt="" decoding="async"></div></div>'+
-    '<div class="editorial-side"><a class="side-feature side-feature-catalog" href="'+esc(link(lang,'catalog'))+'">'+
-    '<span class="side-feature-overline">'+esc(t.store.browseHint)+'</span><span class="side-feature-title">'+esc(t.store.browseHeading)+'</span>'+
-    '<span class="side-feature-symbol" aria-hidden="true">'+icon('game')+'</span><span class="side-feature-arrow">'+icon('arrow')+'</span></a>'+
-    '<a class="side-feature side-feature-about" href="'+esc(link(lang,'about'))+'">'+
-    '<span class="side-feature-overline">'+esc(t.store.personalLabel)+'</span><span class="side-feature-title">'+esc(t.home.aboutTitle)+'</span>'+
-    '<span class="side-feature-symbol" aria-hidden="true">'+icon('heart')+'</span><span class="side-feature-arrow">'+icon('arrow')+'</span></a></div></section>'+
-    '<section class="platform-row" aria-label="'+esc(t.store.platformsTitle)+'"><div class="platform-row-label"><strong>'+esc(t.store.platformsTitle)+'</strong>'+
-    '<small>'+esc(t.store.platformHint)+'</small></div><div class="platform-track">'+devices.map(v=>
-      '<a href="'+esc(link(lang,'catalog'))+'?platform='+v+'">'+esc(t.platforms[v])+icon('arrow')+'</a>').join('')+'</div></section>'+
-    '<section class="shelf-section"><div class="shelf-heading"><div><span class="shelf-overline">'+esc(t.home.sectionKicker)+'</span>'+
-    '<h2>'+esc(t.home.categoriesTitle)+'</h2></div><a href="'+esc(link(lang,'catalog'))+'" class="shelf-more">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a></div>'+
-    categoryGrid(lang,t)+'</section>'+
-    '<section class="shelf-section"><div class="shelf-heading"><div><span class="shelf-overline">'+esc(t.home.featuredKicker)+'</span>'+
-    '<h2>'+esc(t.home.featuredTitle)+'</h2></div>'+(featured.length?'<a href="'+esc(link(lang,'catalog'))+'" class="shelf-more">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a>':'')+'</div>'+
-    (featured.length?'<div class="project-grid">'+featured.map(p=>card(p,lang,t)).join('')+'</div>':emptyBanner(lang,t))+'</section>'+
-    (latest.length?'<section class="shelf-section"><div class="shelf-heading"><h2>'+esc(t.home.recentTitle)+'</h2></div>'+
-    '<div class="project-grid">'+latest.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    '<section class="closing-strip"><div><strong>'+esc(t.home.aboutTitle)+'</strong><p>'+esc(t.home.aboutText)+'</p></div>'+
-    '<a href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a></section>'
-  );
+  return renderHome(lang,projects,t,{esc,icon,link,card,base:BASE});
 }
+
 function selectFilter(label,id,values,t) {
   return '<label class="filter-field" for="filter-'+id+'"><span>'+esc(label)+'</span><select id="filter-'+id+'" data-filter="'+id+'"><option value="">'+esc(t.ui.all)+'</option>'+values.map(v=>'<option value="'+esc(v)+'">'+esc(id==='category'?t.categories[v]:id==='platform'?t.platforms[v]:t.stages[v])+'</option>').join('')+'</select></label>';
 }
@@ -203,7 +181,7 @@ function catalog(lang,projects,t){
   return appShell(lang,'catalog',t,
     '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
     '<header class="library-header"><span class="shelf-overline">'+esc(t.catalog.eyebrow)+'</span><h1>'+esc(t.catalog.title)+'</h1>'+
-    '<p>'+esc(t.catalog.description)+'</p></header>'+form+
+    '<p>'+esc(t.catalog.description)+'</p></header>'+    '<section class="catalog-category-strip"><span class="micro-eyebrow">'+esc(editorial[lang].categoryLabel)+'</span>'+    renderCategoryShelf(lang,t,{esc,icon,link})+'</section>'+form+
     '<div class="catalog-result-bar"><span data-result-count>'+projects.length+' '+esc(projects.length===1?t.ui.result:t.ui.results)+'</span>'+
     '<button class="catalog-reset" type="button" data-reset>'+esc(t.ui.clear)+' '+icon('reset')+'</button></div>'+
     '<section class="catalog-results" aria-live="polite"><div class="project-grid catalog-grid" data-project-grid>'+
@@ -243,12 +221,12 @@ function projectPage(lang,p,t){
 }
 function dateText(date,lang){return new Intl.DateTimeFormat(lang,{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));}
 function html(lang,page,body,projects,slug=''){
-  const t=copy[lang], p=page==='project'?projects.find(x=>x.slug===slug):null;
-  const title=page==='home'?t.meta.homeTitle:page==='catalog'?t.meta.catalogTitle:page==='about'?t.meta.aboutTitle:page==='project'?p.translations[lang].title+' — Luix Arcade':t.meta.notFoundTitle+' — Luix Arcade';
-  const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:page==='project'?p.translations[lang].summary:t.notFound.description;
+  const t=copy[lang], p=['project','preview'].includes(page)?projects.find(x=>x.slug===slug):null;
+  const title=page==='home'?t.meta.homeTitle:page==='catalog'?t.meta.catalogTitle:page==='about'?t.meta.aboutTitle:['project','preview'].includes(page)?p.translations[lang].title+' — Luix Arcade':t.meta.notFoundTitle+' — Luix Arcade';
+  const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:['project','preview'].includes(page)?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f8fc"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(page==='notFound'?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg')+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css')+'"><script defer src="'+esc(BASE+'app.js')+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f7f8"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg')+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css')+'"><script defer src="'+esc(BASE+'app.js')+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);
@@ -257,10 +235,15 @@ async function write(relative,contents){
 }
 async function build(){
   const projects=projectValidate(JSON.parse(await readFile(path.join(root,'content/projects.json'),'utf8')));
+  const previewMetas=previewProjects.map(p=>({...p,translations:Object.fromEntries(locales.map(l=>[
+    l,{title:editorial[l][p.type].title,summary:editorial[l][p.type].summary}
+  ]))}));
+  const pageItems=[...projects,...previewMetas];
   await mkdir(out,{recursive:true});
-  for(const file of ['styles.css','app.js','favicon.svg','arcade-feature.svg','og-preview.svg']){
+  for(const file of ['styles.css','app.js','favicon.svg','og-preview.svg']){
     await cp(path.join(root,'public',file),path.join(out,file));
   }
+  await cp(path.join(root,'public','media'),path.join(out,'media'),{recursive:true});
   await write('.nojekyll','');
   for(const lang of locales){
     const homePath=route(lang,'home').slice(BASE.length)+'index.html';
@@ -270,13 +253,15 @@ async function build(){
     await write(catalogPath,html(lang,'catalog',catalog(lang,projects,copy[lang]),projects));
     await write(aboutPath,html(lang,'about',about(lang,copy[lang]),projects));
     for(const p of projects)await write(route(lang,'project',p.slug).slice(BASE.length)+'index.html',html(lang,'project',projectPage(lang,p,copy[lang]),projects,p.slug));
+    for(const p of previewMetas)await write(route(lang,'preview',p.slug).slice(BASE.length)+'index.html',
+      html(lang,'preview',renderPreview(lang,p,copy[lang],{esc,icon,link,base:BASE}),pageItems,p.slug));
   }
   const t=copy['pt-BR'];
   await write('404.html',html('pt-BR','notFound','<main id="main"><div class="site-shell not-found"><div class="not-found-art">404</div><h1>'+esc(t.notFound.title)+'</h1><p>'+esc(t.notFound.description)+'</p><a class="button button-primary" href="'+esc(link('pt-BR','home'))+'">'+esc(t.notFound.action)+' '+icon('arrow')+'</a></div></main>',projects));
   const routes=locales.flatMap(lang=>[route(lang,'home'),route(lang,'catalog'),route(lang,'about'),...projects.map(p=>route(lang,'project',p.slug))]);
   await write('robots.txt','User-agent: *\nAllow: /\nSitemap: '+SITE+'sitemap.xml\n');
   await write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+routes.map(u=>'<url><loc>'+esc(ORIGIN+u)+'</loc></url>').join('')+'</urlset>\n');
-  console.log('Built '+routes.length+' localized routes ('+projects.length+' projects) at '+BASE);
+  console.log('Built '+routes.length+' indexed routes, '+(previewProjects.length*locales.length)+' preview pages ('+projects.length+' catalog projects) at '+BASE);
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))build().catch(error=>{console.error(error);process.exitCode=1;});
 export {build,route,card,projectPage,catalog};

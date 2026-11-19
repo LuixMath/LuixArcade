@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#202A66"/><stop offset="1" stop-color="#795FC4"/></linearGradient></defs><rect width="1200" height="630" fill="url(#b)"/><circle cx="1120" cy="95" r="250" fill="#ffffff" opacity=".06"/><circle cx="900" cy="580" r="310" fill="#ffdeb8" opacity=".06"/><rect x="95" y="165" width="118" height="118" rx="33" fill="#9F8EFF"/><path d="M120 229a24 24 0 0 1 24-26h19a24 24 0 0 1 24 26l7 24c2 13-11 19-20 9l-11-12h-19l-12 12c-10 9-22 4-20-9z" fill="none" stroke="white" stroke-width="7"/><text x="95" y="388" fill="#ffffff" font-family="Arial,sans-serif" font-weight="800" font-size="105" letter-spacing="-4">Luix Arcade</text><text x="98" y="462" fill="#E5DDF9" font-family="Arial,sans-serif" font-size="32">Games · Mods · Homebrew · Tools</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Luix Arcade</title><desc id="desc">An independent place for games, mods, homebrew and tools.</desc>
+<rect width="1200" height="630" fill="#dce8ec"/>
+<path d="M0 0h1200v8H0z" fill="#bd784f"/>
+<path d="M0 0h690v630H0z" fill="#e8f0f1"/>
+<path d="M60 46h85v85H60z" fill="#253a53" rx="14"/>
+<text x="77" y="102" font-family="Arial,sans-serif" font-weight="900" font-size="42" fill="#eef5f0" letter-spacing="-5">LA</text>
+<text x="166" y="101" font-family="Arial,sans-serif" font-size="30" font-weight="800" fill="#254259">LUIX ARCADE</text>
+<text x="62" y="303" font-family="Arial,sans-serif" font-size="88" letter-spacing="-4.5" font-weight="800" fill="#1b344e">A home for</text>
+<text x="62" y="392" font-family="Arial,sans-serif" font-size="88" letter-spacing="-4.5" font-weight="800" fill="#1b344e">my projects.</text>
+<text x="64" y="460" font-family="Arial,sans-serif" font-size="28" fill="#55748a">Games  ·  Mods  ·  Homebrew  ·  Tools</text>
+<rect x="739" y="72" width="326" height="472" rx="16" fill="#547b8b" transform="rotate(-6 902 308)"/>
+<path d="M767 194 897 128 1027 194 896 260Z" fill="#9dcdad"/>
+<path d="M767 194 896 260v64L767 260Z" fill="#5b8596"/>
+<path d="M896 260 1027 194v65L896 324Z" fill="#386a80"/>
+<path d="m860 193 40-22 39 21-40 21z" fill="#a6d9a3"/>
+<path d="m900 171 0-25 17-9 19 8v30l-17 9z" fill="#589b7d"/>
+<rect x="958" y="296" width="162" height="218" rx="10" fill="#c7b78e" transform="rotate(9 1039 405)"/>
+<circle cx="1038" cy="394" r="61" fill="#e5d5a5" opacity=".6"/>
+<path d="M998 406q37-79 92-45-23 52-4 83-70 27-88-38Z" fill="#315b4d"/>
+<path d="M740 577h387" stroke="#4b7788" opacity=".4"/>
+</svg>

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/github-banner.svg" alt="Luix Arcade — Games, mods and more" width="100%">
+<img src="./public/github-banner.svg" alt="Luix Arcade — an independent game library" width="100%">
 
 <br>
 
@@ -10,12 +10,12 @@
 
 <br>
 
-**[Explore Luix Arcade](https://luixmath.github.io/LuixArcade/)**
+[**Explore Luix Arcade**](https://luixmath.github.io/LuixArcade/)
 
 </div>
 
 ---
 
-I make games, mods, homebrew, and little tools in my free time. Luix Arcade is where I share them as they're ready. Everything here is free.
+I'm Luix. I make games, mods and little tools when I find the time. This site is where I share the projects that are ready, and a closer look at a few I'm still working on. Everything is free.
 
-🇧🇷 Crio jogos, mods, homebrews e ferramentas no meu tempo livre. O Luix Arcade é onde reúno esses projetos e compartilho cada um quando estiver pronto. Tudo por aqui é gratuito.
+Crio jogos, mods e ferramentas quando encontro um tempinho. Este site reúne o que já posso compartilhar e apresenta algumas ideias que ainda estão em desenvolvimento. Tudo gratuito.
