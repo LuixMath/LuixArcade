@@ -127,7 +127,7 @@ function header(lang,page,slug,t) {
 }
 
 function footer(lang,t){
-  return '<footer class="site-footer"><div class="site-shell"><div class="footer-upper"><div class="footer-brand"><span class="footer-mark">'+icon('sparkle')+'</span><div><strong>Luix Arcade</strong><p>'+esc(t.footer.tagline)+'</p></div></div><nav aria-label="'+esc(t.nav.categories)+'"><a href="'+esc(link(lang,'catalog'))+'">'+esc(t.footer.browse)+'</a><a href="'+esc(link(lang,'about'))+'">'+esc(t.footer.about)+'</a><a href="https://github.com/LuixMath" target="_blank" rel="noopener noreferrer">'+esc(t.footer.github)+icon('external')+'</a></nav></div><div class="footer-bottom"><span>© '+new Date().getUTCFullYear()+' Luix Arcade · '+esc(t.footer.rights)+'</span><span>'+esc(t.footer.notice)+'</span></div></div></footer>';
+  return '<footer class="site-footer"><div class="site-shell"><div class="footer-upper"><div class="footer-brand"><span class="footer-mark"><img src="'+esc(BASE+'favicon.svg')+'" alt="" width="32" height="32"></span><div><strong>Luix Arcade</strong><p>'+esc(t.footer.tagline)+'</p></div></div><nav aria-label="'+esc(t.nav.categories)+'"><a href="'+esc(link(lang,'catalog'))+'">'+esc(t.footer.browse)+'</a><a href="'+esc(link(lang,'about'))+'">'+esc(t.footer.about)+'</a><a href="https://github.com/LuixMath" target="_blank" rel="noopener noreferrer">'+esc(t.footer.github)+icon('external')+'</a></nav></div><div class="footer-bottom"><span>© '+new Date().getUTCFullYear()+' Luix Arcade · '+esc(t.footer.rights)+'</span><span>'+esc(t.footer.notice)+'</span></div></div></footer>';
 }
 function card(p,lang,t){
   const tr=p.translations[lang];

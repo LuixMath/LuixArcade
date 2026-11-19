@@ -7,53 +7,53 @@ const platforms=['3ds','pc','ps2','xbox360','web'];
 
 export function renderCategoryShelf(lang,t,{esc,icon,link}){
   return '<nav class="category-shelf" aria-label="'+esc(t.nav.categories)+'">'+
-    groups.map((id,i)=>'<a class="category-shortcut" href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+
+    groups.map(id=>'<a class="category-shortcut" href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+
       '<span class="category-shortcut-icon" aria-hidden="true">'+icon(symbols[id])+'</span>'+
-      '<span class="category-shortcut-label">'+esc(t.categories[id])+'</span>'+
-      '<span class="category-shortcut-count" aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span></a>').join('')+'</nav>';
+      '<strong class="category-shortcut-label">'+esc(t.categories[id])+'</strong>'+
+      '<span class="category-shortcut-arrow" aria-hidden="true">'+icon('chevron')+'</span></a>').join('')+'</nav>';
 }
 export function renderPlatformBar(lang,t,{esc,link}){
   const e=editorial[lang];
   return '<nav class="platform-strip" aria-label="'+esc(e.platforms)+'"><span>'+esc(e.platforms)+'</span>'+
     '<div>'+platforms.map(id=>'<a href="'+esc(link(lang,'catalog'))+'?platform='+id+'">'+esc(t.platforms[id])+'</a>').join('')+'</div></nav>';
 }
-function featuredCard(lang,p,i,{esc,icon,link,base}){
-  const e=editorial[lang],c=e[p.type],primary=i===0,href=esc(link(lang,'project',p.slug));
-  return '<article class="feature-cover feature-cover-'+p.type+(primary?' feature-cover-lead':' feature-cover-side')+'">'+
-    '<div class="feature-cover-art" aria-hidden="true"><img src="'+esc(imagePath(base,p.cover))+'" alt="" width="920" height="620" decoding="async" '+(primary?'fetchpriority="high"':'loading="lazy"')+'></div>'+
-    '<div class="feature-cover-overlay" aria-hidden="true"></div>'+
-    '<div class="feature-cover-inner">'+
-      '<span class="feature-issue">'+esc(e.featureTag)+' <span aria-hidden="true">·</span> '+esc(p.platform)+'</span>'+
-      '<div class="feature-cover-bottom">'+
-        '<span class="feature-cover-kind">'+esc(c.type)+'</span>'+
-        '<h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle)+'</p>'+
-        '<a class="feature-cover-cta" href="'+href+'">'+esc(e.openStory)+' '+icon('arrow')+'</a>'+
-      '</div></div>'+
-    '<a href="'+href+'" class="feature-cover-full" tabindex="-1" aria-hidden="true"></a>'+
+function stageSlide(lang,p,i,{esc,icon,link,base}){
+  const e=editorial[lang],c=e[p.type];
+  return '<article class="spotlight-slide spotlight-'+p.type+(i===0?' is-active':'')+'" data-feature-slide="'+i+'" '+(i?'inert aria-hidden="true"':'')+'>'+
+    '<div class="spotlight-art"><img src="'+esc(imagePath(base,p.cover))+'" alt="" width="1280" height="800" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'></div>'+
+    '<div class="spotlight-shade" aria-hidden="true"></div>'+
+    '<div class="spotlight-content"><span class="spotlight-overline">'+esc(e.featureTag)+'<span aria-hidden="true"> / </span>Nintendo 3DS</span>'+
+    '<h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle)+'</p>'+
+    '<a class="spotlight-link" href="'+esc(link(lang,'project',p.slug))+'">'+esc(e.openStory)+' '+icon('arrow')+'</a></div>'+
     '</article>';
+}
+function storyTab(lang,p,i,{esc,base}){
+  const e=editorial[lang],c=e[p.type];
+  return '<button type="button" class="spotlight-tab'+(i===0?' is-active':'')+'" data-feature-tab="'+i+'" aria-pressed="'+(i===0?'true':'false')+'">'+
+    '<span class="spotlight-thumb"><img src="'+esc(imagePath(base,p.cover))+'" alt="" width="128" height="84" decoding="async" loading="lazy"></span>'+
+    '<span class="spotlight-tab-text"><small>'+esc(c.type)+'</small><strong>'+esc(c.title)+'</strong></span>'+
+    '<span class="spotlight-tab-indicator" aria-hidden="true"></span></button>';
 }
 export function renderHome(lang,projects,t,helpers){
   const e=editorial[lang],{esc,icon,link,card}=helpers;
   const ready=projects.filter(p=>p.featured).slice(0,6);
   const recent=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,6);
   return '<main id="main" class="arcade-home"><div class="site-shell">'+
-    '<header class="store-heading"><div><span class="eyebrow">'+esc(e.storeLabel)+'</span>'+
-      '<h1>'+esc(e.homeTitle)+'</h1><p>'+esc(e.homeIntro)+'</p></div>'+
-      '<a class="store-heading-link" href="'+esc(link(lang,'about'))+'">'+esc(e.aboutAction)+' '+icon('arrow')+'</a></header>'+
-    '<section class="home-feature" aria-labelledby="home-feature-title">'+
-      '<div class="section-heading"><div><span class="eyebrow">'+esc(e.featureTag)+'</span><h2 id="home-feature-title">'+esc(e.editorialStories)+'</h2></div>'+
-      '<p>'+esc(e.editorialDeck)+'</p></div>'+
-      '<div class="feature-layout">'+previewProjects.map((p,i)=>featuredCard(lang,p,i,helpers)).join('')+'</div>'+
-      '<div class="feature-footnote"><span class="footnote-marker" aria-hidden="true"></span>'+esc(e.previewNotice)+'</div>'+
-    '</section>'+
-    '<section class="home-browse" aria-labelledby="home-browse-title"><div class="section-heading"><div>'+
-      '<span class="eyebrow">'+esc(e.categoryLabel)+'</span><h2 id="home-browse-title">'+esc(e.browseTitle)+'</h2></div>'+
-      '<a class="text-link" href="'+esc(link(lang,'catalog'))+'">'+esc(e.exploreAll)+' '+icon('arrow')+'</a></div>'+
-      renderCategoryShelf(lang,t,helpers)+renderPlatformBar(lang,t,helpers)+'</section>'+
-    (ready.length?'<section class="home-releases"><div class="section-heading"><h2>'+esc(t.home.featuredTitle)+'</h2></div><div class="project-grid">'+ready.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    (recent.length?'<section class="home-releases"><div class="section-heading"><h2>'+esc(t.home.recentTitle)+'</h2></div><div class="project-grid">'+recent.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    '<footer class="home-note"><div><span class="eyebrow">'+esc(e.introLabel)+'</span><h2>'+esc(e.introTitle)+'</h2><p>'+esc(e.introBody)+'</p></div>'+
-      '<a class="text-link" href="'+esc(link(lang,'about'))+'">'+esc(e.introLink)+' '+icon('arrow')+'</a></footer>'+
+    '<div class="home-welcome"><div><span class="eyebrow">'+esc(e.storeLabel)+'</span><h1>'+esc(e.homeTitle)+'</h1>'+
+    '<p>'+esc(e.homeIntro)+'</p></div><a href="'+esc(link(lang,'about'))+'">'+esc(e.aboutAction)+' '+icon('arrow')+'</a></div>'+
+    '<section class="spotlight-section" aria-labelledby="home-feature-title">'+
+    '<header class="shelf-header"><h2 id="home-feature-title">'+esc(e.editorialStories)+'</h2><span>'+esc(e.editorialDeck)+'</span></header>'+
+    '<div class="spotlight-stage" data-feature-carousel>'+
+    previewProjects.map((p,i)=>stageSlide(lang,p,i,helpers)).join('')+
+    '<div class="spotlight-controls"><button type="button" class="spotlight-arrow" data-feature-prev aria-label="'+esc(e.previous)+'">'+icon('back')+'</button>'+
+    '<button type="button" class="spotlight-arrow" data-feature-next aria-label="'+esc(e.next)+'">'+icon('arrow')+'</button></div>'+
+    '</div><div class="spotlight-tabs" role="group" aria-label="'+esc(e.featureNav)+'">'+previewProjects.map((p,i)=>storyTab(lang,p,i,helpers)).join('')+'</div><p class="spotlight-caption">'+esc(e.artLabel)+'</p></section>'+
+    '<section class="discover-section" aria-labelledby="discover-title"><div class="shelf-header"><h2 id="discover-title">'+esc(e.browseTitle)+'</h2>'+
+    '<a href="'+esc(link(lang,'catalog'))+'">'+esc(e.exploreAll)+' '+icon('arrow')+'</a></div>'+renderCategoryShelf(lang,t,helpers)+renderPlatformBar(lang,t,helpers)+'</section>'+
+    (ready.length?'<section class="release-section"><div class="shelf-header"><h2>'+esc(t.home.featuredTitle)+'</h2></div><div class="project-grid">'+ready.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
+    (recent.length?'<section class="release-section"><div class="shelf-header"><h2>'+esc(t.home.recentTitle)+'</h2></div><div class="project-grid">'+recent.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
+    '<section class="home-closing"><div><span class="eyebrow">'+esc(e.introLabel)+'</span><h2>'+esc(e.introTitle)+'</h2><p>'+esc(e.introBody)+'</p></div>'+
+    '<a href="'+esc(link(lang,'about'))+'">'+esc(e.introLink)+' '+icon('arrow')+'</a></section>'+
     '</div></main>';
 }
 function chapterSection(num,tag,title,description,{esc}){

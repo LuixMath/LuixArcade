@@ -82,6 +82,40 @@
     playTone();
   });
 
+  // Featured stories only change on deliberate input; they never auto-advance.
+  const featured = document.querySelector('[data-feature-carousel]');
+  if (featured) {
+    const slides=[...featured.querySelectorAll('[data-feature-slide]')];
+    const tabs=[...document.querySelectorAll('[data-feature-tab]')];
+    let selected=0;
+    function showSlide(index,shouldFocus=false){
+      selected=(index+slides.length)%slides.length;
+      slides.forEach((slide,i)=>{
+        const active=i===selected;
+        slide.classList.toggle('is-active',active);
+        slide.inert=!active;
+        slide.setAttribute('aria-hidden',String(!active));
+      });
+      tabs.forEach((tab,i)=>{
+        tab.classList.toggle('is-active',i===selected);
+        tab.setAttribute('aria-pressed',String(i===selected));
+      });
+      if(shouldFocus)tabs[selected]?.focus();
+      playTone('change');
+    }
+    tabs.forEach((tab,i)=>{
+      tab.addEventListener('click',()=>showSlide(i));
+      tab.addEventListener('keydown',event=>{
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+        event.preventDefault();
+        const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:i+(event.key==='ArrowRight'?1:-1);
+        showSlide(next,true);
+      });
+    });
+    featured.querySelector('[data-feature-prev]')?.addEventListener('click',()=>showSlide(selected-1));
+    featured.querySelector('[data-feature-next]')?.addEventListener('click',()=>showSlide(selected+1));
+  }
+
   const navToggle = document.querySelector('[data-nav-toggle]');
   const mobileNav = document.querySelector('#mobile-nav');
   if (navToggle && mobileNav) {
@@ -145,15 +179,6 @@
       const platform = filters.platform.value;
       const status = filters.status.value;
       const sort = filters.sort.value;
-      const railLinks = [...document.querySelectorAll('.store-rail .rail-link')];
-      railLinks.forEach(anchor => anchor.removeAttribute('aria-current'));
-      const chosen = railLinks.find(anchor => {
-        const url = new URL(anchor.href);
-        return category ? url.searchParams.get('category') === category
-          : platform ? url.searchParams.get('platform') === platform
-          : url.pathname === location.pathname && !url.search;
-      });
-      chosen?.setAttribute('aria-current', 'page');
       let shown = 0;
       for (const item of items) {
         const matches = (!q || normalize(item.dataset.title).includes(q))
@@ -174,6 +199,7 @@
       count.textContent = shown + ' ' + (shown === 1 ? singular[locale] : plural[locale]);
       const hasFilters = !!(q || category || platform || status);
       const filterActive = hasFilters || sort !== 'newest';
+      count.hidden = items.length === 0 && !filterActive;
       document.querySelectorAll('.catalog-reset').forEach(button => { button.hidden = !filterActive; });
       if (defaultEmpty) defaultEmpty.hidden = !(items.length === 0 && !hasFilters);
       if (searchEmpty) searchEmpty.hidden = !(shown === 0 && (items.length > 0 || hasFilters));

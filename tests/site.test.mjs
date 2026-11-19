@@ -56,8 +56,8 @@ test('Static build renders all three languages without mock projects',async()=>{
   assert.match(await load('es/index.html'),/Proyectos destacados/);
   assert.match(await load('index.html'),/Em destaque/);
   assert.doesNotMatch(await load('index.html'),/releases\/download/);
-  assert.match(await load('index.html'),/class="feature-layout"/);
-  assert.equal((await load('index.html')).match(/class="feature-cover feature-cover-/g)?.length,2);
+  assert.match(await load('index.html'),/class="spotlight-stage"/);
+  assert.equal((await load('index.html')).match(/class="spotlight-slide spotlight-/g)?.length,2);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
   assert.match(await load('sitemap.xml'),/LuixArcade\/es\/acerca/);
