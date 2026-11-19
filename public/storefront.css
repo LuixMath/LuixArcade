@@ -283,3 +283,12 @@ h1,h2,h3{letter-spacing:-.042em}
   .store-art-bottom{font-size:.72rem;bottom:12px}
   .store-visual:after{width:235px;height:235px}
 }
+
+
+/* Keep the decorative labels legible on the dark hero artwork. */
+:root[data-theme="dark"] .store-art-top,
+:root[data-theme="dark"] .store-art-bottom { color:#e3f0e9; }
+@media(prefers-color-scheme:dark) {
+  :root:not([data-theme]) .store-art-top,
+  :root:not([data-theme]) .store-art-bottom { color:#e3f0e9; }
+}
