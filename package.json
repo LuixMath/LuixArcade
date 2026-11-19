@@ -1,0 +1,17 @@
+{
+  "name": "luix-arcade",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A home for my games, mods, homebrew, and other projects.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test",
+    "check": "node --check scripts/build.mjs && node --check public/app.js && node --test && npm run build",
+    "audit": "npm audit --audit-level=high --omit=dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
