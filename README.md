@@ -23,6 +23,7 @@ Open **http://localhost:4173/LuixArcade/**. The preview command builds the site 
 | `npm run build` | Generate the static site in `dist/` |
 | `npm run dev` | Build and preview locally |
 | `npm run test` | Run validation and localization tests |
+| `npm run smoke` | Test pages in Chrome at desktop and mobile sizes |
 | `npm run check` | Check scripts, tests, and production build |
 | `npm run audit` | Audit the npm dependency graph |
 

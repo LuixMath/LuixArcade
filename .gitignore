@@ -1,7 +1,8 @@
+.DS_Store
 dist/
 node_modules/
 coverage/
-.DS_Store
+artifacts/
 .env
 .env.*
 !.env.example
