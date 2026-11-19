@@ -1,18 +1,21 @@
 <div align="center">
 
-# Luix Arcade
+<img src="./public/github-banner.svg" alt="Luix Arcade — Games, mods and more" width="100%">
 
-🇺🇸 A home for my games, mods, homebrew, and other projects.
+<br>
 
-🇧🇷 Um espaço para meus jogos, mods, homebrews e outros projetos.
+🇺🇸 **A home for my games, mods, homebrew, and other projects.**
 
-**[Visit the arcade](https://luixmath.github.io/LuixArcade/)**
+🇧🇷 **Um espaço para meus jogos, mods, homebrews e outros projetos.**
+
+<br>
+
+**[Explore Luix Arcade](https://luixmath.github.io/LuixArcade/)**
 
 </div>
 
 ---
 
-Luix Arcade is a personal space where I share the games, mods, homebrew, and tools I work on in my spare time. Everything here is free to explore, and new projects will be added as they're ready.
+I make games, mods, homebrew, and little tools in my free time. Luix Arcade is where I share them as they're ready. Everything here is free.
 
-🇧🇷 O Luix Arcade é o meu espaço para reunir jogos, mods, homebrews e ferramentas que desenvolvo no tempo livre. Tudo por aqui é gratuito, e os projetos serão publicados conforme ficarem prontos.
-
+🇧🇷 Crio jogos, mods, homebrews e ferramentas no meu tempo livre. O Luix Arcade é onde reúno esses projetos e compartilho cada um quando estiver pronto. Tudo por aqui é gratuito.

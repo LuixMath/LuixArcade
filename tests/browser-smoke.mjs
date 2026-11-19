@@ -77,12 +77,14 @@ async function run(){
   await ensure('Mobile layout adapts',await evaluate('getComputedStyle(document.querySelector(".category-grid")).gridTemplateColumns.split(" ").length === 2'));
   await screenshot('mobile-home');
   await evaluate('document.querySelector("[data-theme-toggle]").click()');
+  await screenshot('mobile-home-dark');
   await ensure('Theme toggle changes theme',await evaluate('["dark","light"].includes(document.documentElement.dataset.theme)'));
   await visit(local+'catalogo/');
   await ensure('Catalog stays empty',await evaluate('document.querySelectorAll("[data-project-item]").length===0 && !document.querySelector("[data-empty-default]").hidden'));
+  await screenshot('mobile-catalog-empty');
   await evaluate('(()=>{const input=document.querySelector("#catalog-search");input.value="something";input.dispatchEvent(new Event("input",{bubbles:true}));})()');
   await ensure('Catalog search shows real zero-results state',await evaluate('!document.querySelector("[data-empty-search]").hidden && document.querySelector("[data-empty-default]").hidden'));
-  await screenshot('mobile-catalog');
+  await screenshot('mobile-catalog-filtered');
   await viewport(320,700,true);
   await ensure('Small phones have no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
   await visit(local+'en/about/');
