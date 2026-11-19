@@ -52,12 +52,12 @@ test('Static build renders all three languages without mock projects',async()=>{
     assert.doesNotMatch(html,/data-project-item/);
     assert.doesNotMatch(html,/project-card/);
   }
-  assert.match(await load('en/index.html'),/Featured projects/);
-  assert.match(await load('es/index.html'),/Proyectos destacados/);
-  assert.match(await load('index.html'),/Em destaque/);
+  assert.match(await load('en/index.html'),/From my workbench/);
+  assert.match(await load('es/index.html'),/Desde mi taller/);
+  assert.match(await load('index.html'),/Direto da bancada/);
   assert.doesNotMatch(await load('index.html'),/releases\/download/);
-  assert.match(await load('index.html'),/class="spotlight-stage"/);
-  assert.equal((await load('index.html')).match(/class="spotlight-slide spotlight-/g)?.length,2);
+  assert.match(await load('index.html'),/class="cover-gallery"/);
+  assert.equal((await load('index.html')).match(/class="cover-card cover-/g)?.length,2);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
   assert.match(await load('sitemap.xml'),/LuixArcade\/es\/acerca/);
@@ -71,7 +71,7 @@ test('Preview project editions remain separate from empty public catalog', async
     for(const slug of ['crystal3ds','ocarina-of-time-3d-echoes']){
       const html=await load(prefix+type+'/'+slug+'/index.html');
       assert.match(html,/noindex,follow/);
-      assert.match(html,/class="project-edition (crystal|echoes)-edition"/);
+      assert.match(html,/class="preview-page (crystal|echoes)-page"/);
       assert.match(html,/media\/previews\//);
       assert.match(html,/Nintendo 3DS/);
       assert.doesNotMatch(html,/releases\/download/);

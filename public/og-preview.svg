@@ -1,22 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-<title id="title">Luix Arcade</title><desc id="desc">An independent place for games, mods, homebrew and tools.</desc>
-<rect width="1200" height="630" fill="#dce8ec"/>
-<path d="M0 0h1200v8H0z" fill="#bd784f"/>
-<path d="M0 0h690v630H0z" fill="#e8f0f1"/>
-<path d="M60 46h85v85H60z" fill="#253a53" rx="14"/>
-<text x="77" y="102" font-family="Arial,sans-serif" font-weight="900" font-size="42" fill="#eef5f0" letter-spacing="-5">LA</text>
-<text x="166" y="101" font-family="Arial,sans-serif" font-size="30" font-weight="800" fill="#254259">LUIX ARCADE</text>
-<text x="62" y="303" font-family="Arial,sans-serif" font-size="88" letter-spacing="-4.5" font-weight="800" fill="#1b344e">A home for</text>
-<text x="62" y="392" font-family="Arial,sans-serif" font-size="88" letter-spacing="-4.5" font-weight="800" fill="#1b344e">my projects.</text>
-<text x="64" y="460" font-family="Arial,sans-serif" font-size="28" fill="#55748a">Games  ·  Mods  ·  Homebrew  ·  Tools</text>
-<rect x="739" y="72" width="326" height="472" rx="16" fill="#547b8b" transform="rotate(-6 902 308)"/>
-<path d="M767 194 897 128 1027 194 896 260Z" fill="#9dcdad"/>
-<path d="M767 194 896 260v64L767 260Z" fill="#5b8596"/>
-<path d="M896 260 1027 194v65L896 324Z" fill="#386a80"/>
-<path d="m860 193 40-22 39 21-40 21z" fill="#a6d9a3"/>
-<path d="m900 171 0-25 17-9 19 8v30l-17 9z" fill="#589b7d"/>
-<rect x="958" y="296" width="162" height="218" rx="10" fill="#c7b78e" transform="rotate(9 1039 405)"/>
-<circle cx="1038" cy="394" r="61" fill="#e5d5a5" opacity=".6"/>
-<path d="M998 406q37-79 92-45-23 52-4 83-70 27-88-38Z" fill="#315b4d"/>
-<path d="M740 577h387" stroke="#4b7788" opacity=".4"/>
+<title id="title">Luix Arcade</title><desc id="desc">Games, mods, homebrew and things made for fun.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f9f7f0"/><stop offset="1" stop-color="#ede8dc"/></linearGradient>
+ <linearGradient id="blue" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#b7e4df"/><stop offset="1" stop-color="#4b929c"/></linearGradient>
+ <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e7c896"/><stop offset="1" stop-color="#395e51"/></linearGradient>
+ <filter id="shade" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="15"/></filter>
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<path d="M0 0h1200v9H0z" fill="#c95530"/>
+<rect x="78" y="70" width="67" height="67" rx="17" fill="#c95530"/>
+<path d="M99 88h9v31h19v8H99z" fill="#fffaf4"/><circle cx="128" cy="126" r="4" fill="#ffcfad"/>
+<text x="166" y="119" font-size="31" font-family="Arial,sans-serif" font-weight="800" fill="#1c2424" letter-spacing="-1.1">LUIX ARCADE</text>
+<text x="76" y="296" font-size="77" font-family="Arial,sans-serif" font-weight="800" fill="#202829" letter-spacing="-3">Games, mods &amp;</text>
+<text x="76" y="382" font-size="77" font-family="Arial,sans-serif" font-weight="800" fill="#202829" letter-spacing="-3">other ideas.</text>
+<path d="M76 427h530" stroke="#dad7ce" stroke-width="2"/>
+<text x="77" y="478" font-size="24" font-family="Arial,sans-serif" fill="#626e6e">Independent projects, made for fun.</text>
+<text x="77" y="573" font-size="17" font-family="Arial,sans-serif" font-weight="700" fill="#c95530" letter-spacing="2">LUIXMATH · 2026</text>
+<ellipse cx="940" cy="554" rx="222" ry="34" fill="#6b7b6d" opacity=".15" filter="url(#shade)"/>
+<g transform="rotate(-8 865 315)">
+<rect x="708" y="92" width="302" height="448" rx="18" fill="#fbfbf5" stroke="#cfd2c6" stroke-width="3"/>
+<rect x="725" y="109" width="268" height="350" rx="11" fill="url(#blue)"/>
+<path d="M725 388 803 274 863 344 932 258 993 328v131H725Z" fill="#579587"/>
+<path d="M761 369 831 336 900 368 830 402Z" fill="#a5cba6"/>
+<path d="M761 369v35l69 34v-36Z" fill="#63867b"/>
+<path d="M830 402l70-34v35l-70 35Z" fill="#3e777b"/>
+<path d="M844 322l26-71 33 71-28 51Z" fill="#d1f1e4"/>
+<path d="M870 251v96l33-25Z" fill="#69bcb5"/>
+<text x="730" y="510" font-size="28" font-family="Arial,sans-serif" font-weight="800" fill="#253735">Crystal3DS</text>
+</g>
+<g transform="rotate(10 1022 367)">
+<rect x="955" y="212" width="186" height="308" rx="15" fill="#fbfbf5" stroke="#cfd2c6" stroke-width="3"/>
+<rect x="968" y="225" width="160" height="225" rx="8" fill="url(#gold)"/>
+<circle cx="1079" cy="286" r="38" fill="#fff0bf" opacity=".53"/>
+<path d="M968 402 1024 321 1076 370 1128 301v149H968Z" fill="#355d4d"/>
+<path d="M1013 416v-68l34-35 34 35v68" stroke="#d4cbad" stroke-width="13" fill="none"/>
+<text x="970" y="489" font-size="25" font-family="Georgia,serif" font-weight="700" fill="#344437">Echoes</text>
+</g>
 </svg>

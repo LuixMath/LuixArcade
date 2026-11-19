@@ -12,7 +12,7 @@
   const storedTheme = safeStore.get('luix-theme');
   if (storedTheme === 'light' || storedTheme === 'dark') root.dataset.theme = storedTheme;
   const currentTheme = () => root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#0e1420' : '#f4f5f7');
+  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#16191a' : '#f7f6f2');
   syncThemeColor();
   document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -72,49 +72,15 @@
   document.addEventListener('pointerdown', event => {
     if (!soundEnabled || !event.target.closest) return;
     if (!event.target.closest('a,button,summary')) return;
-    if (event.target.closest('[data-sound-toggle],[data-feature-tab],[data-feature-prev],[data-feature-next]')) return;
+    if (event.target.closest('[data-sound-toggle]')) return;
     playTone();
   });
   document.addEventListener('keydown', event => {
     if (!soundEnabled || !['Enter',' '].includes(event.key)) return;
     if (!event.target.matches?.('a,button,summary')) return;
-    if (event.target.matches('[data-sound-toggle],[data-feature-tab],[data-feature-prev],[data-feature-next]')) return;
+    if (event.target.matches('[data-sound-toggle]')) return;
     playTone();
   });
-
-  // Featured stories only change on deliberate input; they never auto-advance.
-  const featured = document.querySelector('[data-feature-carousel]');
-  if (featured) {
-    const slides=[...featured.querySelectorAll('[data-feature-slide]')];
-    const tabs=[...document.querySelectorAll('[data-feature-tab]')];
-    let selected=0;
-    function showSlide(index,shouldFocus=false){
-      selected=(index+slides.length)%slides.length;
-      slides.forEach((slide,i)=>{
-        const active=i===selected;
-        slide.classList.toggle('is-active',active);
-        slide.inert=!active;
-        slide.setAttribute('aria-hidden',String(!active));
-      });
-      tabs.forEach((tab,i)=>{
-        tab.classList.toggle('is-active',i===selected);
-        tab.setAttribute('aria-pressed',String(i===selected));
-      });
-      if(shouldFocus)tabs[selected]?.focus();
-      playTone('change');
-    }
-    tabs.forEach((tab,i)=>{
-      tab.addEventListener('click',()=>showSlide(i));
-      tab.addEventListener('keydown',event=>{
-        if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
-        event.preventDefault();
-        const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:i+(event.key==='ArrowRight'?1:-1);
-        showSlide(next,true);
-      });
-    });
-    featured.querySelector('[data-feature-prev]')?.addEventListener('click',()=>showSlide(selected-1));
-    featured.querySelector('[data-feature-next]')?.addEventListener('click',()=>showSlide(selected+1));
-  }
 
   const navToggle = document.querySelector('[data-nav-toggle]');
   const mobileNav = document.querySelector('#mobile-nav');

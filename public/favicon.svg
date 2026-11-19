@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="Luix Arcade">
-<rect width="80" height="80" rx="18" fill="#24354c"/>
-<path d="M19 21v38h18" fill="none" stroke="#fffaf0" stroke-width="8" stroke-linejoin="round"/>
-<path d="m44 58 12-36 12 36m-19-12h14" fill="none" stroke="#a9d5e1" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="69" cy="16" r="5" fill="#d98f5c"/>
+<title>Luix Arcade</title>
+<rect width="80" height="80" rx="21" fill="#c95530"/>
+<path d="M25 18h10v35h22v9H25z" fill="#fffaf4"/>
+<circle cx="60" cy="60" r="5" fill="#f3c49b"/>
 </svg>

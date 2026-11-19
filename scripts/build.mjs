@@ -39,6 +39,8 @@ const iconPaths = {
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
   reset: '<path d="M3 11a9 9 0 1 1 2 6m-2 4v-6h6"/>',
   filter: '<path d="M4 7h16M7 12h10M10 17h4"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.01"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.01"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/>'
 };
 
@@ -115,13 +117,25 @@ function mobileDock(lang,page,t){
 }
 
 function header(lang,page,slug,t) {
-  const u=editorial[lang];
-  return '<header class="site-header"><div class="site-shell header-inner">'+
-    '<a class="wordmark" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><span class="brand-type">Luix</span><span class="brand-second">Arcade</span></a>'+
-    '<nav class="desktop-nav" aria-label="'+esc(t.nav.categories)+'">'+['home','catalog','about'].map(id=>
-      '<a class="nav-item '+(page===id?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(page===id?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
+  const e=editorial[lang],u=e.shop;
+  const navigation=[['home','game'],['catalog','box'],['about','heart']];
+  const catIcons={games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'};
+  const isCurrent=id=>id===page||(page==='preview'&&id==='home');
+  return '<div class="arcade-frame"><aside class="arcade-sidebar" aria-label="'+esc(t.nav.categories)+'">'+
+    '<div class="sidebar-inner"><a class="sidebar-brand" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade">'+
+    '<span class="sidebar-emblem" aria-hidden="true">L<span>.</span></span>'+
+    '<span class="sidebar-brand-word"><b>Luix</b><small>ARCADE</small></span></a>'+
+    '<div class="sidebar-section-label">'+esc(u.navigation)+'</div>'+
+    '<nav class="sidebar-main-nav">'+navigation.map(([id,sym])=>
+      '<a href="'+esc(link(lang,id))+'" '+(isCurrent(id)?'aria-current="page"':'')+'>'+icon(sym)+'<span>'+esc(t.nav[id])+'</span></a>').join('')+'</nav>'+
+    '<div class="sidebar-section-label sidebar-categories-title">'+esc(t.nav.categories)+'</div>'+
+    '<nav class="sidebar-categories">'+categories.map(id=>'<a href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+icon(catIcons[id])+'<span>'+esc(t.categories[id])+'</span></a>').join('')+'</nav>'+
+    '<div class="sidebar-bottom"><span class="sidebar-bottom-icon">'+icon('heart')+'</span><p>'+esc(u.railNote)+'</p></div></div></aside>'+
+    '<div class="arcade-frame-main"><header class="site-header"><div class="site-shell header-inner">'+
+    '<a class="header-mobile-brand" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><b>Luix</b><span>Arcade</span></a>'+
+    '<span class="header-section-title">'+esc(page==='home'?u.pageHome:page==='catalog'?t.nav.catalog:page==='about'?t.nav.about:u.pageProjects)+'</span>'+
     '<div class="header-tools"><a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+'<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
-    '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(u.soundEnable)+'" title="'+esc(u.soundEnable)+'" data-sound-on-label="'+esc(u.soundDisable)+'" data-sound-off-label="'+esc(u.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
+    '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(e.soundEnable)+'" title="'+esc(e.soundEnable)+'" data-sound-on-label="'+esc(e.soundDisable)+'" data-sound-off-label="'+esc(e.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
     '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
     localeSelector(lang,page,slug,t)+'</div></div></header>';
 }
@@ -155,20 +169,26 @@ function catalog(lang,projects,t){
     '<option value="newest">'+esc(t.catalog.newest)+'</option><option value="oldest">'+esc(t.catalog.oldest)+'</option>'+
     '<option value="name">'+esc(t.catalog.alphabetical)+'</option></select></label></div></details></form>';
   return appShell(lang,'catalog',t,
-    '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
-    '<header class="library-header"><span class="shelf-overline">'+esc(t.catalog.eyebrow)+'</span><h1>'+esc(t.catalog.title)+'</h1>'+
-    '<p>'+esc(t.catalog.description)+'</p></header>'+    '<section class="catalog-category-strip"><span class="micro-eyebrow">'+esc(editorial[lang].categoryLabel)+'</span>'+    renderCategoryShelf(lang,t,{esc,icon,link})+'</section>'+form+
-    '<div class="catalog-result-bar"><span data-result-count>'+projects.length+' '+esc(projects.length===1?t.ui.result:t.ui.results)+'</span>'+
-    '<button class="catalog-reset" type="button" data-reset>'+esc(t.ui.clear)+' '+icon('reset')+'</button></div>'+
-    '<section class="catalog-results" aria-live="polite"><div class="project-grid catalog-grid" data-project-grid>'+
-    projects.map(p=>'<div data-project-item data-title="'+esc(p.translations[lang].title+' '+p.translations[lang].summary)+'" data-category="'+esc(p.category)+
-    '" data-status="'+esc(p.status)+'" data-platforms="'+esc(p.platforms.join(' '))+'" data-updated="'+esc(p.updated)+'">'+card(p,lang,t)+'</div>').join('')+'</div>'+
-    '<div data-empty-default '+(projects.length?'hidden':'')+'>'+emptyBanner(lang,t,'catalog')+'</div>'+
-    '<div class="empty-search" data-empty-search hidden><div class="empty-search-mark" aria-hidden="true">'+icon('search')+'</div>'+
-    '<h2>'+esc(t.catalog.noMatchTitle)+'</h2><p>'+esc(t.catalog.noMatchText)+'</p>'+
-    '<button class="button button-primary" type="button" data-reset>'+esc(t.catalog.reset)+'</button></div></section>'
+    '<header class="catalog-landing"><span class="section-kicker">'+esc(t.catalog.eyebrow)+'</span>'+
+      '<h1>'+esc(t.catalog.title)+'</h1><p>'+esc(t.catalog.description)+'</p></header>'+
+    '<div class="catalog-workspace"><div class="catalog-workspace-head"><span>'+esc(t.ui.searchLabel)+'</span></div>'+form+'</div>'+
+    '<section class="catalog-category-strip" aria-labelledby="catalog-categories"><div class="section-line"><div>'+
+      '<span class="section-kicker">'+esc(editorial[lang].categoryLabel)+'</span>'+
+      '<h2 id="catalog-categories">'+esc(t.home.categoriesTitle)+'</h2></div></div>'+
+      renderCategoryShelf(lang,t,{esc,icon,link})+'</section>'+
+    '<section class="catalog-release-section" aria-labelledby="catalog-releases">'+
+      '<div class="catalog-result-bar"><h2 id="catalog-releases">'+esc(t.home.featuredTitle)+'</h2><span data-result-count></span>'+
+      '<button class="catalog-reset" type="button" data-reset>'+esc(t.ui.clear)+' '+icon('reset')+'</button></div>'+
+      '<div class="catalog-results" aria-live="polite"><div class="project-grid catalog-grid" data-project-grid>'+
+      projects.map(p=>'<div data-project-item data-title="'+esc(p.translations[lang].title+' '+p.translations[lang].summary)+'" data-category="'+esc(p.category)+
+      '" data-status="'+esc(p.status)+'" data-platforms="'+esc(p.platforms.join(' '))+'" data-updated="'+esc(p.updated)+'">'+card(p,lang,t)+'</div>').join('')+'</div>'+
+      '<div data-empty-default '+(projects.length?'hidden':'')+'>'+emptyBanner(lang,t,'catalog')+'</div>'+
+      '<div class="empty-search" data-empty-search hidden><div class="empty-search-mark" aria-hidden="true">'+icon('search')+'</div>'+
+      '<h2>'+esc(t.catalog.noMatchTitle)+'</h2><p>'+esc(t.catalog.noMatchText)+'</p>'+
+      '<button class="button button-primary" type="button" data-reset>'+esc(t.catalog.reset)+'</button></div></div></section>'
   );
 }
+
 function about(lang,t){
   const a=t.about;
   return appShell(lang,'about',t,
@@ -202,7 +222,7 @@ function html(lang,page,body,projects,slug=''){
   const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:['project','preview'].includes(page)?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f4f5f7"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f7f6f2"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+'</div></div>'+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);

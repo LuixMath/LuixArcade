@@ -7,6 +7,18 @@ export const previewProjects = [
 
 export const editorial = {
   'pt-BR': {
+    shop:{
+      navigation:'NAVEGAÇÃO',railNote:'Um lugar para os meus projetos, feitos por diversão.',
+      pageHome:'Descobrir',pageProjects:'Projetos',workInProgress:'EM DESENVOLVIMENTO',
+      masthead:'BEM-VINDO AO LUIX ARCADE',homeTitle:'Explore o que estou criando.',
+      homeSubtitle:'Jogos, mods e experiências independentes. Um projeto de cada vez, no meu tempo livre.',
+      issueTag:'NA VITRINE',featureTitle:'Direto da bancada',featureNote:'Projetos em desenvolvimento · Nintendo 3DS',
+      browseTag:'ENCONTRE ALGO LEGAL',browseTitle:'Explore a biblioteca',
+      libraryTag:'CATÁLOGO',libraryTitle:'Os lançamentos ficam aqui.',
+      libraryNote:'Ainda não publiquei nenhuma versão para baixar. Quando estiver pronta, vai aparecer neste espaço.',
+      libraryAction:'Abrir biblioteca',editorial:'ESPECIAL'
+    },
+
     storeLabel:'MEU ESPAÇO DE PROJETOS',
     homeTitle:'Luix Arcade',
     homeIntro:'Um lugar para reunir meus jogos, mods e experimentos. Tudo gratuito, feito nas horas vagas.',
@@ -82,6 +94,18 @@ export const editorial = {
   },
 
   en: {
+    shop:{
+      navigation:'NAVIGATION',railNote:'A home for the projects I make just for fun.',
+      pageHome:'Discover',pageProjects:'Projects',workInProgress:'IN DEVELOPMENT',
+      masthead:'WELCOME TO LUIX ARCADE',homeTitle:'A little place for what I make.',
+      homeSubtitle:'Games, mods, and experiments. One project at a time, whenever I can find the time.',
+      issueTag:'ON THE SHELF',featureTitle:'From my workbench',featureNote:'Work in progress · Nintendo 3DS',
+      browseTag:'FIND SOMETHING FUN',browseTitle:'Browse the library',
+      libraryTag:'LIBRARY',libraryTitle:'Releases will live here.',
+      libraryNote:'Nothing ready to download just yet. When a build is ready, this is where you’ll find it.',
+      libraryAction:'Open library',editorial:'FEATURE'
+    },
+
     storeLabel:'MY PROJECT SPACE',
     homeTitle:'Luix Arcade',
     homeIntro:'A place for the games, mods, and experiments I make in my spare time. Everything is free.',
@@ -157,6 +181,18 @@ export const editorial = {
   },
 
   es: {
+    shop:{
+      navigation:'NAVEGACIÓN',railNote:'Un espacio para los proyectos que hago por diversión.',
+      pageHome:'Descubrir',pageProjects:'Proyectos',workInProgress:'EN DESARROLLO',
+      masthead:'BIENVENIDO A LUIX ARCADE',homeTitle:'Un rincón para mis creaciones.',
+      homeSubtitle:'Juegos, mods y experimentos. Un proyecto a la vez, en los ratos libres.',
+      issueTag:'EN LA VITRINA',featureTitle:'Desde mi taller',featureNote:'Proyectos en desarrollo · Nintendo 3DS',
+      browseTag:'ENCUENTRA ALGO INTERESANTE',browseTitle:'Explora la biblioteca',
+      libraryTag:'CATÁLOGO',libraryTitle:'Aquí aparecerán los lanzamientos.',
+      libraryNote:'Todavía no hay versiones para descargar. Cuando tenga una lista, la encontrarás aquí.',
+      libraryAction:'Abrir biblioteca',editorial:'ESPECIAL'
+    },
+
     storeLabel:'MI ESPACIO DE PROYECTOS',
     homeTitle:'Luix Arcade',
     homeIntro:'Un espacio para los juegos, mods y experimentos que hago en mis ratos libres. Todo gratis.',
