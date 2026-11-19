@@ -8,20 +8,23 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const browser=[process.env.CHROME_PATH,'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe','C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe','/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].filter(Boolean).find(existsSync);
 if(!browser) throw new Error('Chrome/Chromium is required for the visual smoke test.');
 const port=4189;
+const debugPort=23000 + (process.pid % 15000);
 const local='http://127.0.0.1:'+port+'/LuixArcade/';
 const server=spawn(process.execPath,['scripts/serve.mjs'],{cwd:root,env:{...process.env,PORT:String(port)},stdio:['ignore','pipe','pipe']});
 let serverError='';
 server.stderr.on('data',chunk=>{serverError+=chunk;});
-let chrome,ws;
+let chrome,ws,chromeError='';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function until(check,tries=80,delay=150){
   for(let i=0;i<tries;i++){try{const v=await check();if(v)return v;}catch{}await sleep(delay);}
-  throw new Error('Timed out: '+serverError.slice(-1000));
+  throw new Error('Timed out: server='+serverError.slice(-1000)+' browser='+chromeError.slice(-1800));
 }
 async function run(){
   await until(async()=>{const r=await fetch(local);return r.ok;});
-  chrome=spawn(browser,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--hide-scrollbars','--remote-debugging-port=9237','--user-data-dir='+path.join(process.env.TEMP || '/tmp','luix-browser-'+process.pid),'--window-size=1280,800','about:blank'],{stdio:'ignore'});
-  const page=await until(async()=>{const r=await fetch('http://127.0.0.1:9237/json/list');const pages=await r.json();return pages.find(x=>x.type==='page'&&x.webSocketDebuggerUrl);});
+  chrome=spawn(browser,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--hide-scrollbars','--remote-debugging-port='+debugPort,'--user-data-dir='+path.join(process.env.TEMP || '/tmp','luix-browser-'+process.pid),'--window-size=1280,800','about:blank'],{stdio:['ignore','ignore','pipe']});
+  chrome.stderr?.on('data',chunk=>{chromeError+=chunk.toString().slice(-5000);});
+  chrome.on('error',error=>{chromeError+=error.message;});
+  const page=await until(async()=>{const r=await fetch('http://127.0.0.1:'+debugPort+'/json/list');const pages=await r.json();return pages.find(x=>x.type==='page'&&x.webSocketDebuggerUrl);});
   ws=new WebSocket(page.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});});
   let id=0;
