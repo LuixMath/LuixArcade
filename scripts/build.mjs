@@ -1,5 +1,6 @@
 import {readFile, mkdir, writeFile, cp} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {copy, locales} from '../content/i18n.mjs';
 import {editorial,previewProjects} from '../content/editorial.mjs';
@@ -10,6 +11,7 @@ const out = path.join(root, 'dist');
 const BASE = '/' + (process.env.SITE_BASE ?? 'LuixArcade').replace(/^\/+|\/+$/g, '') + '/';
 const ORIGIN = 'https://luixmath.github.io';
 const SITE = ORIGIN + BASE;
+let assetRevision = 'dev';
 const categories = ['games', 'mods', 'homebrew', 'tools', 'experiments'];
 const stages = ['released', 'development', 'paused', 'archived'];
 const platforms = ['3ds', 'pc', 'ps2', 'xbox360', 'web', 'android', 'other'];
@@ -226,7 +228,7 @@ function html(lang,page,body,projects,slug=''){
   const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:['project','preview'].includes(page)?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f7f8"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg')+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css')+'"><script defer src="'+esc(BASE+'app.js')+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f7f8"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);
@@ -234,6 +236,8 @@ async function write(relative,contents){
   await writeFile(destination,contents,'utf8');
 }
 async function build(){
+  const [cssSource,jsSource]=await Promise.all([readFile(path.join(root,'public','styles.css')),readFile(path.join(root,'public','app.js'))]);
+  assetRevision=createHash('sha256').update(cssSource).update(jsSource).digest('hex').slice(0,12);
   const projects=projectValidate(JSON.parse(await readFile(path.join(root,'content/projects.json'),'utf8')));
   const previewMetas=previewProjects.map(p=>({...p,translations:Object.fromEntries(locales.map(l=>[
     l,{title:editorial[l][p.type].title,summary:editorial[l][p.type].summary}

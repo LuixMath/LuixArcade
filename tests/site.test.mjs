@@ -47,7 +47,8 @@ test('Static build renders all three languages without mock projects',async()=>{
     assert.match(html,/<main id="main"/);
     assert.match(html,/Content-Security-Policy/);
     assert.match(html,/Luix Arcade/);
-    assert.match(html,/href="\/LuixArcade\/styles.css"/);
+    assert.match(html,/href="\/LuixArcade\/styles\.css\?v=[a-f0-9]{12}"/);
+    assert.match(html,/src="\/LuixArcade\/app\.js\?v=[a-f0-9]{12}"/);
     assert.doesNotMatch(html,/data-project-item/);
     assert.doesNotMatch(html,/project-card/);
   }

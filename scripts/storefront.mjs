@@ -40,8 +40,7 @@ export function renderHome(lang,projects,t,helpers){
   const latest=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,6);
   return '<main id="main" class="storefront-main"><div class="site-shell">'+
     '<div class="storefront-intro"><div><span class="micro-eyebrow">'+esc(u.storeLabel)+'</span>'+
-    '<h1>'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeIntro)+'</p></div>'+
-    '<span class="intro-stamp" aria-hidden="true">Luix<span>Arcade</span><small>EST. 2026</small></span></div>'+
+    '<h1>'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeIntro)+'</p></div></div>'+
     '<section class="editorial-section"><div class="section-identity"><div>'+
     '<span class="micro-eyebrow">'+esc(u.featureTag)+'</span><h2>'+esc(u.editorialStories)+'</h2>'+
     '<p>'+esc(u.editorialDeck)+'</p></div></div>'+
