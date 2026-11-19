@@ -103,23 +103,6 @@ function link(lang,page,slug='') {return route(lang,page,slug);}
 function localeSelector(lang,page,slug,t) {
   return '<details class="language-switcher"><summary class="icon-action language-summary" aria-label="'+esc(t.ui.language)+'" title="'+esc(t.ui.language)+'">'+icon('globe')+'<span class="language-code">'+esc(t.localeShort)+'</span><span class="mini-chevron">⌄</span></summary><div class="language-list" role="group" aria-label="'+esc(t.ui.language)+'">'+locales.map(x=>'<a data-lang-link="'+esc(x)+'" lang="'+esc(x)+'" href="'+esc(link(x,page,slug))+'" '+(x===lang?'aria-current="page"':'')+'><span class="flag">'+copy[x].flag+'</span><span>'+esc(copy[x].localeLabel)+'</span>'+(x===lang?'<span class="check-symbol" aria-hidden="true">✓</span>':'')+'</a>').join('')+'</div></details>';
 }
-function storeRail(lang,page,t){
-  const cats=['games','mods','homebrew','tools','experiments'].map(c=>
-    '<a class="rail-link" href="'+esc(link(lang,'catalog'))+'?category='+c+'">'+
-    '<span class="rail-icon" aria-hidden="true">'+icon({games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'}[c])+'</span>'+
-    '<span>'+esc(t.categories[c])+'</span></a>').join('');
-  const devices=['3ds','pc','ps2','xbox360','web'].map(v=>
-    '<a class="rail-link rail-device" href="'+esc(link(lang,'catalog'))+'?platform='+v+'">'+
-    '<span class="device-indicator" aria-hidden="true"></span>'+esc(t.platforms[v])+'</a>').join('');
-  return '<aside class="store-rail" aria-label="'+esc(t.store.railNavigation)+'"><nav class="rail-navigation" aria-label="'+esc(t.store.railNavigation)+'">'+
-    '<span class="rail-caption">'+esc(t.store.quickAccess)+'</span>'+
-    '<a class="rail-link rail-primary" href="'+esc(link(lang,'home'))+'" '+(page==='home'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('game')+'</span>'+esc(t.nav.home)+'</a>'+
-    '<a class="rail-link rail-primary" href="'+esc(link(lang,'catalog'))+'" '+(page==='catalog'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('box')+'</span>'+esc(t.store.allProjects)+'</a>'+
-    '<div class="rail-separator"></div><span class="rail-caption">'+esc(t.nav.categories)+'</span>'+cats+
-    '<div class="rail-separator"></div><span class="rail-caption">'+esc(t.store.platformsTitle)+'</span>'+devices+
-    '<div class="rail-separator"></div><a class="rail-link" href="'+esc(link(lang,'about'))+'" '+(page==='about'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('heart')+'</span>'+esc(t.nav.about)+'</a></nav>'+
-    '<p class="rail-footnote">'+esc(t.store.railFootnote)+'</p></aside>';
-}
 function appShell(lang,page,t,content) {
   return '<main id="main"><div class="site-shell store-page">'+content+'</div></main>';
 }
@@ -150,15 +133,6 @@ function card(p,lang,t){
   const tr=p.translations[lang];
   const cover=p.cover?'<img src="'+esc(mediaUrl(p.cover))+'" alt="'+esc(tr.title)+'" width="640" height="400" loading="lazy" decoding="async">':'<div class="cover-fallback">'+icon(p.category==='games'?'game':p.category==='mods'?'puzzle':p.category==='homebrew'?'chip':p.category==='tools'?'apps':'flask')+'</div>';
   return '<article class="project-card"><a class="card-cover" href="'+esc(link(lang,'project',p.slug))+'">'+cover+'<span class="card-overlay">'+esc(t.ui.readMore)+' '+icon('arrow')+'</span></a><div class="card-info"><div class="card-kicker">'+esc(t.categories[p.category])+' <span aria-hidden="true">·</span> '+esc(t.stages[p.status])+'</div><h3><a href="'+esc(link(lang,'project',p.slug))+'">'+esc(tr.title)+'</a></h3><p>'+esc(tr.summary)+'</p><div class="card-foot">'+p.platforms.map(x=>'<span class="platform-tag">'+esc(t.platforms[x])+'</span>').join('')+'</div></div></article>';
-}
-function categoryGrid(lang,t){
-  const catIcons={games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'};
-  return '<div class="category-grid">'+categories.map((category,index)=>
-    '<a class="category-tile category-'+category+'" href="'+esc(link(lang,'catalog'))+'?category='+category+'">'+
-    '<span class="category-top"><span class="category-illustration" aria-hidden="true">'+icon(catIcons[category])+'</span>'+
-    '<span class="category-index" aria-hidden="true">'+String(index+1).padStart(2,'0')+'</span></span>'+
-    '<span class="category-content"><strong>'+esc(t.categories[category])+'</strong><small>'+esc(t.categoryDescriptions[category])+'</small></span>'+
-    '<span class="category-arrow" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</div>';
 }
 function emptyBanner(lang,t,kind='home'){
   return '<div class="catalog-empty-note">'+icon('box')+'<div><strong>'+esc(t.catalog.nothingTitle)+'</strong><p>'+esc(t.catalog.nothingText)+'</p></div></div>';

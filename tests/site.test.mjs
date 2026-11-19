@@ -56,6 +56,8 @@ test('Static build renders all three languages without mock projects',async()=>{
   assert.match(await load('es/index.html'),/Proyectos destacados/);
   assert.match(await load('index.html'),/Em destaque/);
   assert.doesNotMatch(await load('index.html'),/releases\/download/);
+  assert.match(await load('index.html'),/class="feature-layout"/);
+  assert.equal((await load('index.html')).match(/class="feature-cover feature-cover-/g)?.length,2);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
   assert.match(await load('sitemap.xml'),/LuixArcade\/es\/acerca/);
@@ -69,7 +71,7 @@ test('Preview project editions remain separate from empty public catalog', async
     for(const slug of ['crystal3ds','ocarina-of-time-3d-echoes']){
       const html=await load(prefix+type+'/'+slug+'/index.html');
       assert.match(html,/noindex,follow/);
-      assert.match(html,/class="edition edition-/);
+      assert.match(html,/class="project-edition (crystal|echoes)-edition"/);
       assert.match(html,/media\/previews\//);
       assert.match(html,/Nintendo 3DS/);
       assert.doesNotMatch(html,/releases\/download/);

@@ -63,7 +63,7 @@ export const editorial = {
       nextTitle:'Quando houver algo para mostrar de verdade.',
       next:'A página vai receber capturas reais, notas de compatibilidade, detalhes técnicos e instruções quando houver uma build que faça sentido compartilhar.',
       type:'Motor voxel 3D',
-      theme:'PROJECT JOURNAL · VOL. 01'
+      theme:'CADERNO DE PROJETO · VOL. 01'
     },
     echoes:{
       title:'Ocarina of Time 3D Echoes',
@@ -77,7 +77,7 @@ export const editorial = {
       nextTitle:'Documentar antes de publicar.',
       next:'Antes de disponibilizar um patch, quero registrar o que foi confirmado, os limites de compatibilidade e um processo de instalação claro.',
       type:'Patch e mod',
-      theme:'SPECIAL ISSUE · 3DS'
+      theme:'EDIÇÃO ESPECIAL · 3DS'
     }
   },
 
@@ -213,7 +213,7 @@ export const editorial = {
       nextTitle:'Cuando haya algo real que mostrar.',
       next:'Esta página recibirá capturas reales, notas de compatibilidad, detalles técnicos e instrucciones cuando exista una build que tenga sentido compartir.',
       type:'Motor voxel 3D',
-      theme:'PROJECT JOURNAL · VOL. 01'
+      theme:'CUADERNO DE PROYECTO · VOL. 01'
     },
     echoes:{
       title:'Ocarina of Time 3D Echoes',
@@ -227,7 +227,7 @@ export const editorial = {
       nextTitle:'Documentar antes de publicar.',
       next:'Antes de compartir un parche, quiero dejar claro qué está confirmado, cuáles son los límites de compatibilidad y cómo instalarlo.',
       type:'Parche y mod',
-      theme:'SPECIAL ISSUE · 3DS'
+      theme:'EDICIÓN ESPECIAL · 3DS'
     }
   }
 };

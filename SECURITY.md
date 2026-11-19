@@ -11,7 +11,8 @@ Please don't post credentials or private data in public issues. If you find a vu
 - Download URLs must be GitHub Releases links; no fabricated or unverified downloads.
 - External links use `rel="noopener noreferrer"`.
 - An HTML meta Content Security Policy limits scripts, styles, connections, images, objects and forms.
-- CI runs translation tests, static-build checks and dependency audits before publishing.
+- CI runs translation tests, static-build checks, dependency audits, and a privacy check before publishing.
+- The privacy check rejects common hard-coded credentials, personal home directories, device identifiers, and e-mail addresses in tracked or generated text files. It reports locations, not matched values.
 
 ## Limitations
 

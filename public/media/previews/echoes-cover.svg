@@ -1,1 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" role="img" aria-labelledby="a"><title id="a">Echoes original antique fantasy editorial illustration</title><defs><linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eddfb8"/><stop offset=".5" stop-color="#bea879"/><stop offset="1" stop-color="#5d7968"/></linearGradient><radialGradient id="sun"><stop stop-color="#fff7d9"/><stop offset=".62" stop-color="#e9d4a1"/><stop offset="1" stop-color="#c5ad6e" stop-opacity=".1"/></radialGradient><pattern id="grain" width="17" height="19" patternUnits="userSpaceOnUse"><circle cx="2" cy="7" r="1" fill="#604633" opacity=".13"/><circle cx="11" cy="15" r=".7" fill="#fff" opacity=".15"/></pattern><filter id="shade"><feDropShadow dx="3" dy="13" stdDeviation="12" flood-opacity=".27"/></filter></defs><rect width="920" height="620" fill="url(#paper)"/><rect width="920" height="620" fill="url(#grain)"/><circle cx="528" cy="253" r="214" fill="url(#sun)" opacity=".88"/><circle cx="528" cy="253" r="235" fill="none" stroke="#fff2cc" opacity=".42"/><path d="M0 431 149 276l104 99 129-171 115 150 92-104 183 140 148-119v349H0Z" fill="#7a8373" opacity=".74"/><path d="M0 473 155 353l135 83 159-150 107 128 159-122 205 123v205H0Z" fill="#4e6e63" opacity=".74"/><path d="M0 523 153 440l170 42 149-71 166 56 148-63 134 73v143H0Z" fill="#375f56"/><g stroke="#d1bb8d" stroke-width="8" fill="none" opacity=".55"><path d="M342 427v-93c0-36 28-62 66-62s69 26 69 62v93"/><path d="M364 421v-76c0-25 17-45 44-45s46 20 46 45v76"/><path d="M319 430h185M320 449h180"/></g><path d="M0 549 142 501l148 51 171-50 166 54 150-60 143 46v78H0Z" fill="#264b42"/><g fill="#22473e"><path d="m61 553 31-99 25 42 19-66 27 51 18-37 41 114z"/><path d="m687 527 26-80 30 39 17-68 30 51 22-39 48 113z"/><path d="m568 565 26-81 28 37 11-55 30 40 27-32 49 100z"/></g><g stroke="#365444" stroke-width="10" fill="none" opacity=".85"><path d="M0 13Q145 110 105 308M25 107Q136 149 195 182M920 22Q775 125 820 330M903 114Q806 185 699 195"/></g><g fill="#547457"><path d="M0 85q98-18 122 46Q38 126 0 85zM55 160q115-17 143 40Q103 201 55 160zM910 83q-89-16-137 54 103 7 137-54zM841 146q-102-13-137 54 93 6 137-54z"/></g><g transform="translate(525 262) rotate(-24)" filter="url(#shade)"><path d="M-124 9C-97-67-23-89 42-69 81-57 94-36 130-35c28 1 48-8 64-22-11 42-34 64-64 84-23 16-23 38-30 62-13 40-51 69-94 71-72 4-143-69-130-151Z" fill="#30534f" stroke="#eadbb3" stroke-width="9"/><path d="M-101 18C-71-40-15-55 34-44" fill="none" stroke="#8eab98" stroke-width="7" opacity=".52"/><g fill="#e0d4a3" stroke="#1c3e3a" stroke-width="4"><circle cx="-39" cy="-11" r="13"/><circle cx="-5" cy="-24" r="11"/><circle cx="29" cy="27" r="12"/><circle cx="-11" cy="61" r="12"/><circle cx="53" cy="66" r="10"/></g></g><path d="M0 568q231-32 475 8t445-8v52H0z" fill="#203f3b" opacity=".26"/><g stroke="#fff1c4" fill="none" stroke-width="2" opacity=".68"><path d="M24 24h86M24 24v86M896 24h-86M896 24v86M24 596h86M24 596v-86M896 596h-86M896 596v-86"/><path d="M461 24v25m-13-12h26M461 571v25m-13-13h26"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="e-title">
+<title id="e-title">Echoes — original editorial illustration of an ancient instrument above a fantasy landscape</title>
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d2bc8d"/><stop offset=".46" stop-color="#a49e74"/><stop offset="1" stop-color="#3b6458"/></linearGradient>
+<radialGradient id="sun"><stop stop-color="#ffedc3" stop-opacity=".72"/><stop offset=".5" stop-color="#e5cd98" stop-opacity=".21"/><stop offset="1" stop-color="#d9c391" stop-opacity="0"/></radialGradient>
+<linearGradient id="jade" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5e7b68"/><stop offset=".35" stop-color="#2e594e"/><stop offset="1" stop-color="#152f2e"/></linearGradient>
+<linearGradient id="hills" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#809b82"/><stop offset="1" stop-color="#234c43"/></linearGradient>
+<pattern id="grain" width="19" height="23" patternUnits="userSpaceOnUse"><circle cx="2" cy="6" r=".6" fill="#5b5139" opacity=".15"/><circle cx="13" cy="16" r=".7" fill="#f0e1bc" opacity=".2"/></pattern>
+<filter id="ambient" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>
+<rect width="1280" height="800" fill="url(#sky)"/>
+<rect width="1280" height="800" fill="url(#grain)"/>
+<ellipse cx="888" cy="272" rx="340" ry="285" fill="url(#sun)"/>
+<g stroke="#f0e2b9" fill="none" opacity=".4">
+<circle cx="864" cy="321" r="245" stroke-width="1.3"/>
+<circle cx="864" cy="321" r="270" stroke-width=".8"/>
+<circle cx="864" cy="321" r="299" stroke-width=".7"/>
+<path d="M864 31v56M835 58h58M864 570v48M841 594h46"/>
+</g>
+<!-- misty mountain bands -->
+<path d="M0 531 128 392 242 470 359 315 478 464 602 367 766 489 872 343 1039 481 1160 390 1280 480v320H0Z" fill="#8a9880" opacity=".55"/>
+<path d="M0 571 151 437l155 104 159-135 171 133 160-105 157 107 174-139 153 135v263H0Z" fill="#577967" opacity=".57"/>
+<path d="M0 639 141 553l174 81 167-98 158 107 191-86 196 60 253-83v266H0Z" fill="url(#hills)"/>
+<path d="M0 689 184 623 326 683 541 586 698 667 891 603 1085 672 1280 618v182H0Z" fill="#31564a" opacity=".92"/>
+<!-- ancient broken stone arch in the middle distance -->
+<g opacity=".62" fill="none" stroke="#d9caa0">
+<path d="M781 510v-124c0-62 49-113 112-113s114 51 114 113v126" stroke-width="20"/>
+<path d="M811 512v-121c0-45 35-81 82-81s84 36 84 81v121" stroke-width="8"/>
+<path d="M741 521h305" stroke-width="10"/>
+<path d="M757 541h275" stroke-width="5"/>
+</g>
+<!-- faint map bearings -->
+<g stroke="#eee0b8" stroke-width="1.2" fill="none" opacity=".42">
+<path d="M145 101h86M188 59v85M1084 102h90M1128 57v91"/>
+<path d="M68 746h102M68 746v-58M1214 746h-102M1214 746v-58"/>
+</g>
+<!-- engraved ceremonial ocarina, carefully modelled as a single ceramic shape -->
+<g transform="translate(870 361) rotate(-13)">
+<ellipse cx="5" cy="105" rx="294" ry="94" fill="#192d2a" opacity=".32" filter="url(#ambient)"/>
+<path d="M-246 27C-224-119-109-189 26-165c78 14 119 70 175 78 42 6 90-3 139-40-26 73-75 127-117 171-39 41-44 78-67 122C96 262-36 288-139 236-229 192-272 106-246 27Z"
+  fill="url(#jade)" stroke="#e7d9af" stroke-width="9" stroke-linejoin="round"/>
+<path d="M-222 13C-188-106-90-153 28-128" stroke="#acc2a8" stroke-width="13" opacity=".38" fill="none" stroke-linecap="round"/>
+<path d="M-199 111C-118 216 16 233 108 171" fill="none" stroke="#90af97" opacity=".37" stroke-width="7" stroke-linecap="round"/>
+<path d="M152-77C193-43 233-49 295-91" fill="none" stroke="#b6c5a7" stroke-width="4" opacity=".39"/>
+<g fill="#d9c89e" stroke="#203f39" stroke-width="7">
+<circle cx="-99" cy="-42" r="22"/>
+<circle cx="-24" cy="-91" r="21"/>
+<circle cx="25" cy="-5" r="19"/>
+<circle cx="-74" cy="72" r="23"/>
+<circle cx="63" cy="92" r="17"/>
+</g>
+<g stroke="#f1d9a8" stroke-width="2.1" fill="none" opacity=".65">
+<circle cx="-99" cy="-42" r="32"/><circle cx="-24" cy="-91" r="32"/>
+<path d="M-163 139q106 88 237 53M-173 150q94 89 233 63"/>
+</g>
+<path d="M-210 67q9-56 35-82" stroke="#d3dac3" stroke-width="3" opacity=".58" fill="none"/>
+</g>
+<!-- hand-inked foliage around frame -->
+<g fill="#1d4439" opacity=".68">
+<path d="M0 68q169-47 255 82Q106 183 0 68Z"/>
+<path d="M0 214q150-60 237 83Q91 311 0 214Z"/>
+<path d="M1280 74q-174-23-241 121 153 8 241-121Z"/>
+<path d="M1280 213q-154-28-231 104 154 18 231-104Z"/>
+</g>
+<g fill="none" stroke="#24493e" stroke-width="13" opacity=".61">
+<path d="M0 0q204 120 173 372M1280 0q-181 148-148 423"/>
+</g>
+<path d="M0 714q231-66 417 1t452-25 411 7v103H0Z" fill="#213f37" opacity=".62"/>
+</svg>

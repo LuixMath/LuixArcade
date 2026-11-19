@@ -82,40 +82,6 @@
     playTone();
   });
 
-  // Handpicked featured stories, not releases. Both projects remain accessible without JS.
-  const showcase = document.querySelector('[data-feature-carousel]');
-  if (showcase) {
-    const slides=[...showcase.querySelectorAll('[data-feature-slide]')];
-    const tabs=[...document.querySelectorAll('[data-feature-tab]')];
-    let current=0;
-    const changeTo = next => {
-      current=(next+slides.length)%slides.length;
-      slides.forEach((slide,index) => {
-        const active=index===current;
-        slide.classList.toggle('is-active',active);
-        slide.inert=!active;
-        if (active) slide.removeAttribute('aria-hidden');
-        else slide.setAttribute('aria-hidden','true');
-      });
-      tabs.forEach((tab,index) => {
-        const active=index===current;
-        tab.classList.toggle('is-selected',active);
-        tab.setAttribute('aria-pressed',String(active));
-      });
-      playTone('change');
-    };
-    tabs.forEach((tab,index) => tab.addEventListener('click',() => changeTo(index)));
-    showcase.querySelector('[data-feature-prev]')?.addEventListener('click',() => changeTo(current-1));
-    showcase.querySelector('[data-feature-next]')?.addEventListener('click',() => changeTo(current+1));
-    tabs.forEach((tab,index) => tab.addEventListener('keydown',event => {
-      if (!['ArrowLeft','ArrowRight'].includes(event.key)) return;
-      event.preventDefault();
-      const next=(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
-      changeTo(next);
-      tabs[next].focus();
-    }));
-  }
-
   const navToggle = document.querySelector('[data-nav-toggle]');
   const mobileNav = document.querySelector('#mobile-nav');
   if (navToggle && mobileNav) {
