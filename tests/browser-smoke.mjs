@@ -69,11 +69,11 @@ async function run(){
   await send('Runtime.enable');
   await viewport(1280,800,false);
   await visit(local);
-  await ensure('Portuguese storefront and new retail navigation',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("criando") && !!document.querySelector(".arcade-sidebar")'));
+  await ensure('Portuguese storefront and new retail navigation',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("criando") && !!document.querySelector(".main-navigation")'));
   await ensure('Empty release catalog does not display fake cards',await evaluate('document.querySelectorAll(".project-card").length===0'));
   await ensure('Desktop has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
   await ensure('New cover gallery has both project covers',await evaluate('document.querySelectorAll(".cover-card").length===2 && document.querySelectorAll(".cover-art img").length===2'));
-  await ensure('Desktop sidebar is visible',await evaluate('getComputedStyle(document.querySelector(".arcade-sidebar")).display !== "none" && document.querySelectorAll(".sidebar-main-nav a").length===3'));
+  await ensure('Desktop horizontal navigation is visible',await evaluate('getComputedStyle(document.querySelector(".main-navigation")).display !== "none" && document.querySelectorAll(".main-navigation a").length===3'));
   await ensure('Cover links lead to real preview pages',await evaluate('[...document.querySelectorAll(".cover-art")].every(a=>a.href.includes("/projeto/"))'));
   await ensure('Original cover assets render correctly',await evaluate('[...document.querySelectorAll(".cover-art img")].every(img=>img.complete && img.naturalWidth>0)'));
   await ensure('Sound is opt-in',await evaluate('document.querySelector("[data-sound-toggle]").getAttribute("aria-pressed")==="false"'));
@@ -84,7 +84,7 @@ async function run(){
   await screenshot('wide-home');
   await evaluate('document.documentElement.dataset.theme="light"');
   await sleep(250);
-  await ensure('Light theme contrast tokens available',await evaluate('getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim()==="#f7f6f2"'));
+  await ensure('Light theme contrast tokens available',await evaluate('getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim()==="#f8faf9"'));
   await ensure('Light theme uses warm neutral surfaces',await evaluate('getComputedStyle(document.documentElement).getPropertyValue("--surface").trim()==="#fff"'));
   await screenshot('wide-home-light');
   await visit(local+'projeto/crystal3ds/');
@@ -109,7 +109,7 @@ async function run(){
   await viewport(390,844,true);
   await sleep(200);
   await ensure('Mobile has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
-  await ensure('Mobile layout adapts',await evaluate('getComputedStyle(document.querySelector(".arcade-sidebar")).display === "none" && getComputedStyle(document.querySelector(".directory-grid")).display === "grid" && getComputedStyle(document.querySelector(".mobile-dock")).display !== "none"'));
+  await ensure('Mobile layout adapts',await evaluate('getComputedStyle(document.querySelector(".main-navigation")).display === "none" && getComputedStyle(document.querySelector(".directory-grid")).display === "grid" && getComputedStyle(document.querySelector(".mobile-dock")).display !== "none"'));
   await screenshot('phone-home');
   await visit(local+'projeto/crystal3ds/');
   await ensure('Crystal3DS responsive layout',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));

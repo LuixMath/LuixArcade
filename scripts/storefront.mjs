@@ -5,49 +5,47 @@ const groups=Object.keys(icons);
 const featuredImage=(base,p)=>base+'media/previews/'+p.cover;
 
 export function renderCategoryShelf(lang,t,{esc,icon,link}){
-  return '<nav class="directory-grid" aria-label="'+esc(t.nav.categories)+'">'+
-    groups.map((id,i)=>'<a class="directory-link directory-'+id+'" href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+
-      '<span class="directory-icon" aria-hidden="true">'+icon(icons[id])+'</span>'+
-      '<span class="directory-name">'+esc(t.categories[id])+'</span>'+
-      '<span class="directory-next" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</nav>';
+  return '<nav class="directory-grid" aria-label="'+esc(t.nav.categories)+'">'+groups.map(id=>
+    '<a class="directory-link" href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+
+    '<span class="directory-icon" aria-hidden="true">'+icon(icons[id])+'</span>'+
+    '<span class="directory-name">'+esc(t.categories[id])+'</span>'+
+    '<span class="directory-next" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</nav>';
 }
 function previewCard(lang,p,i,{esc,icon,link,base}){
-  const c=editorial[lang][p.type],e=editorial[lang];
-  return '<article class="cover-card cover-'+p.type+'" data-preview="'+esc(p.type)+'">'+
-     '<a class="cover-art" href="'+esc(link(lang,'preview',p.slug))+'" aria-label="'+esc(c.title)+' — '+esc(e.openStory)+'">'+
-       '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'>'+
-       '<span class="cover-art-corner" aria-hidden="true">'+icon('arrow')+'</span></a>'+
-     '<div class="cover-under"><div class="cover-name"><span class="cover-kind">'+esc(c.type)+'</span>'+
-       '<h3><a href="'+esc(link(lang,'preview',p.slug))+'">'+esc(c.title)+'</a></h3>'+
-       '<p>'+esc(c.subtitle)+'</p></div><span class="cover-status">'+esc(e.draftStage)+'</span></div>'+
+  const e=editorial[lang],c=e[p.type];
+  const url=esc(link(lang,'preview',p.slug));
+  return '<article class="cover-card cover-'+p.type+'">'+
+    '<a class="cover-art" href="'+url+'" aria-label="'+esc(c.title)+' — '+esc(e.openStory)+'">'+
+       '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'></a>'+
+    '<div class="cover-under"><div class="cover-name">'+
+      '<h3><a href="'+url+'">'+esc(c.title)+'</a></h3>'+
+      '<p>'+esc(c.subtitle)+'</p></div>'+
+      '<a class="cover-read" href="'+url+'" aria-label="'+esc(e.openStory)+' — '+esc(c.title)+'">'+icon('arrow')+'</a></div>'+
     '</article>';
 }
 export function renderHome(lang,projects,t,helpers){
   const e=editorial[lang],u=e.shop,{esc,icon,link,card}=helpers;
-  const ready=projects.filter(p=>p.featured).slice(0,4);
-  const recent=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,4);
+  const published=projects.filter(p=>p.featured).slice(0,6);
   return '<main id="main" class="arcade-home"><div class="site-shell">'+
-    '<header class="home-heading"><div><span class="section-kicker">'+esc(u.masthead)+'</span>'+
-      '<h1>'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeSubtitle)+'</p></div>'+
-      '<div class="home-stamp" aria-hidden="true"><span>LU<span>IX</span></span><small>ARCADE</small></div></header>'+
-    '<section class="featured-gallery" aria-labelledby="gallery-title">'+
-      '<div class="section-line"><div><span class="section-kicker">'+esc(u.issueTag)+'</span><h2 id="gallery-title">'+esc(u.featureTitle)+'</h2></div>'+
+    '<section class="home-heading" aria-labelledby="home-title"><div><span class="section-kicker">'+esc(u.masthead)+'</span>'+
+    '<h1 id="home-title">'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeSubtitle)+'</p></div></section>'+
+    '<section class="featured-gallery" aria-labelledby="gallery-title"><div class="section-line">'+
+      '<h2 id="gallery-title">'+esc(u.featureTitle)+'</h2>'+
       '<span class="section-aside">'+esc(u.featureNote)+'</span></div>'+
       '<div class="cover-gallery">'+previewProjects.map((p,i)=>previewCard(lang,p,i,helpers)).join('')+'</div>'+
-      '<p class="art-disclaimer">'+icon('info')+esc(e.previewNotice)+'</p></section>'+
-    '<section class="shop-directory" aria-labelledby="directory-title"><div class="section-line"><div>'+
-      '<span class="section-kicker">'+esc(u.browseTag)+'</span><h2 id="directory-title">'+esc(u.browseTitle)+'</h2></div>'+
+      '<p class="art-disclaimer">'+icon('info')+esc(e.artLabel)+'</p></section>'+
+    '<section class="shop-directory" aria-labelledby="directory-title"><div class="section-line">'+
+      '<h2 id="directory-title">'+esc(u.browseTitle)+'</h2>'+
       '<a class="section-all" href="'+esc(link(lang,'catalog'))+'">'+esc(e.exploreAll)+' '+icon('arrow')+'</a></div>'+
       renderCategoryShelf(lang,t,helpers)+'</section>'+
-    (ready.length?'<section class="release-shelf"><div class="section-line"><h2>'+esc(t.home.featuredTitle)+'</h2></div><div class="project-grid">'+ready.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    (recent.length?'<section class="release-shelf"><div class="section-line"><h2>'+esc(t.home.recentTitle)+'</h2></div><div class="project-grid">'+recent.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    '<section class="empty-library-link"><div class="empty-library-symbol" aria-hidden="true">'+icon('box')+'</div>'+
-       '<div><span class="section-kicker">'+esc(u.libraryTag)+'</span><h2>'+esc(u.libraryTitle)+'</h2>'+
-       '<p>'+esc(u.libraryNote)+'</p></div>'+
-       '<a href="'+esc(link(lang,'catalog'))+'">'+esc(u.libraryAction)+' '+icon('arrow')+'</a></section>'+
-    '<div class="home-signoff"><p>'+esc(e.introBody)+'</p><a href="'+esc(link(lang,'about'))+'">'+esc(e.introLink)+' '+icon('arrow')+'</a></div>'+
+    (published.length?
+      '<section class="release-shelf"><div class="section-line"><h2>'+esc(t.home.featuredTitle)+'</h2></div>'+
+      '<div class="project-grid">'+published.map(p=>card(p,lang,t)).join('')+'</div></section>':
+      '<div class="home-quiet-note"><p>'+esc(u.libraryNote)+'</p>'+
+        '<a href="'+esc(link(lang,'catalog'))+'">'+esc(u.libraryAction)+' '+icon('arrow')+'</a></div>')+
     '</div></main>';
 }
+
 function editionFact(label,value,{esc}) {
   return '<div><dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd></div>';
 }

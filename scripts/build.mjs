@@ -118,26 +118,21 @@ function mobileDock(lang,page,t){
 
 function header(lang,page,slug,t) {
   const e=editorial[lang],u=e.shop;
-  const navigation=[['home','game'],['catalog','box'],['about','heart']];
-  const catIcons={games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'};
-  const isCurrent=id=>id===page||(page==='preview'&&id==='home');
-  return '<div class="arcade-frame"><aside class="arcade-sidebar" aria-label="'+esc(t.nav.categories)+'">'+
-    '<div class="sidebar-inner"><a class="sidebar-brand" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade">'+
-    '<span class="sidebar-emblem" aria-hidden="true">L<span>.</span></span>'+
-    '<span class="sidebar-brand-word"><b>Luix</b><small>ARCADE</small></span></a>'+
-    '<div class="sidebar-section-label">'+esc(u.navigation)+'</div>'+
-    '<nav class="sidebar-main-nav">'+navigation.map(([id,sym])=>
-      '<a href="'+esc(link(lang,id))+'" '+(isCurrent(id)?'aria-current="page"':'')+'>'+icon(sym)+'<span>'+esc(t.nav[id])+'</span></a>').join('')+'</nav>'+
-    '<div class="sidebar-section-label sidebar-categories-title">'+esc(t.nav.categories)+'</div>'+
-    '<nav class="sidebar-categories">'+categories.map(id=>'<a href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+icon(catIcons[id])+'<span>'+esc(t.categories[id])+'</span></a>').join('')+'</nav>'+
-    '<div class="sidebar-bottom"><span class="sidebar-bottom-icon">'+icon('heart')+'</span><p>'+esc(u.railNote)+'</p></div></div></aside>'+
-    '<div class="arcade-frame-main"><header class="site-header"><div class="site-shell header-inner">'+
-    '<a class="header-mobile-brand" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><b>Luix</b><span>Arcade</span></a>'+
-    '<span class="header-section-title">'+esc(page==='home'?u.pageHome:page==='catalog'?t.nav.catalog:page==='about'?t.nav.about:u.pageProjects)+'</span>'+
-    '<div class="header-tools"><a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+'<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
-    '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(e.soundEnable)+'" title="'+esc(e.soundEnable)+'" data-sound-on-label="'+esc(e.soundDisable)+'" data-sound-off-label="'+esc(e.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
-    '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
-    localeSelector(lang,page,slug,t)+'</div></div></header>';
+  const nav=[['home','home'],['catalog','box'],['about','heart']];
+  const selected=id=>page===id||(page==='preview'&&id==='home');
+  return '<div class="arcade-frame"><div class="arcade-frame-main"><header class="site-header"><div class="site-shell header-inner">'+
+    '<a class="brand-lockup" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade">'+
+      '<span class="brand-symbol" aria-hidden="true">L</span>'+
+      '<span class="brand-words"><strong>Luix</strong><span>Arcade</span></span></a>'+
+    '<nav class="main-navigation" aria-label="'+esc(u.navigation)+'">'+
+      nav.map(([id,sym])=>'<a href="'+esc(link(lang,id))+'" '+(selected(id)?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+
+    '</nav><div class="header-tools">'+
+      '<a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+
+        '<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
+      '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
+      '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(e.soundEnable)+'" title="'+esc(e.soundEnable)+'" data-sound-on-label="'+esc(e.soundDisable)+'" data-sound-off-label="'+esc(e.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
+      localeSelector(lang,page,slug,t)+
+    '</div></div></header>';
 }
 
 function footer(lang,t){
@@ -222,7 +217,7 @@ function html(lang,page,body,projects,slug=''){
   const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:['project','preview'].includes(page)?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f7f6f2"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+'</div></div>'+mobileDock(lang,page,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f8faf9"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+'</div></div>'+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);
