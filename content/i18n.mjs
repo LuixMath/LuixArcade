@@ -70,7 +70,7 @@ export const copy = {
       category: 'Categoria', platform: 'Plataforma', status: 'Desenvolvimento',
       sort: 'Ordenar por', newest: 'Mais recentes', oldest: 'Mais antigos', alphabetical: 'Nome (A–Z)',
       nothingTitle: 'Nada publicado por enquanto.',
-      nothingText: 'O catálogo está pronto para receber projetos, mas ainda não há itens disponíveis. Volte mais tarde para descobrir novidades.',
+      nothingText: 'Quando houver algo pronto para baixar, ele aparece aqui.',
       noMatchTitle: 'Nenhum projeto encontrado.',
       noMatchText: 'Tente outra busca ou ajuste os filtros para explorar o catálogo.',
       reset: 'Ver todo o catálogo'
@@ -185,7 +185,7 @@ export const copy = {
       category: 'Category', platform: 'Platform', status: 'Development status',
       sort: 'Sort by', newest: 'Recently updated', oldest: 'Oldest updates', alphabetical: 'Name (A–Z)',
       nothingTitle: 'Nothing on the shelves just yet.',
-      nothingText: 'The library is ready, but no projects have been published. Check back later to see what’s new.',
+      nothingText: 'A ready-to-download project will appear here.',
       noMatchTitle: 'No matching projects.',
       noMatchText: 'Try a different search or adjust your filters.',
       reset: 'Show all projects'
@@ -300,7 +300,7 @@ export const copy = {
       category: 'Categoría', platform: 'Plataforma', status: 'Estado de desarrollo',
       sort: 'Ordenar por', newest: 'Actualizados recientemente', oldest: 'Menos recientes', alphabetical: 'Nombre (A–Z)',
       nothingTitle: 'Todavía no hay proyectos publicados.',
-      nothingText: 'El catálogo está listo, pero aún no tiene proyectos. Vuelve más adelante para descubrir novedades.',
+      nothingText: 'Cuando haya algo listo para descargar, aparecerá aquí.',
       noMatchTitle: 'No encontramos proyectos que coincidan.',
       noMatchText: 'Prueba otra búsqueda o cambia los filtros.',
       reset: 'Ver todos los proyectos'

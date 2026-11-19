@@ -12,7 +12,7 @@
   const storedTheme = safeStore.get('luix-theme');
   if (storedTheme === 'light' || storedTheme === 'dark') root.dataset.theme = storedTheme;
   const currentTheme = () => root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#151b27' : '#f6f7f8');
+  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#0e1420' : '#f4f5f7');
   syncThemeColor();
   document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -20,6 +20,101 @@
     safeStore.set('luix-theme', next);
     syncThemeColor();
   });
+
+  // Optional interface tones. Generated in-browser: no sound files and no autoplay.
+  const soundToggle = document.querySelector('[data-sound-toggle]');
+  let soundEnabled = safeStore.get('luix-sound') === 'on';
+  let soundContext;
+  let lastTone = 0;
+  function playTone(kind='tap') {
+    if (!soundEnabled || performance.now() - lastTone < 70) return;
+    lastTone = performance.now();
+    try {
+      const Audio = window.AudioContext || window.webkitAudioContext;
+      if (!Audio) return;
+      soundContext ||= new Audio();
+      if (soundContext.state === 'suspended') void soundContext.resume().catch(() => {});
+      const now = soundContext.currentTime;
+      const note = (freq, delay, duration, volume) => {
+        const oscillator = soundContext.createOscillator();
+        const envelope = soundContext.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq,now+delay);
+        oscillator.frequency.exponentialRampToValueAtTime(freq*.96,now+delay+duration);
+        envelope.gain.setValueAtTime(.0001,now+delay);
+        envelope.gain.exponentialRampToValueAtTime(volume,now+delay+.009);
+        envelope.gain.exponentialRampToValueAtTime(.0001,now+delay+duration);
+        oscillator.connect(envelope);
+        envelope.connect(soundContext.destination);
+        oscillator.start(now+delay);
+        oscillator.stop(now+delay+duration+.015);
+      };
+      if (kind === 'change') {
+        note(515,0,.083,.019);
+        note(690,.063,.115,.016);
+      } else note(590,0,.09,.017);
+    } catch { /* Audio is optional, including when browser policy blocks it. */ }
+  }
+  function syncSoundToggle() {
+    if (!soundToggle) return;
+    soundToggle.setAttribute('aria-pressed',String(soundEnabled));
+    const label=soundEnabled?soundToggle.dataset.soundOnLabel:soundToggle.dataset.soundOffLabel;
+    soundToggle.setAttribute('aria-label',label);
+    soundToggle.title=label;
+  }
+  syncSoundToggle();
+  soundToggle?.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    safeStore.set('luix-sound',soundEnabled?'on':'off');
+    syncSoundToggle();
+    if (soundEnabled) { lastTone = 0; playTone('change'); }
+  });
+  document.addEventListener('pointerdown', event => {
+    if (!soundEnabled || !event.target.closest) return;
+    if (!event.target.closest('a,button,summary')) return;
+    if (event.target.closest('[data-sound-toggle],[data-feature-tab],[data-feature-prev],[data-feature-next]')) return;
+    playTone();
+  });
+  document.addEventListener('keydown', event => {
+    if (!soundEnabled || !['Enter',' '].includes(event.key)) return;
+    if (!event.target.matches?.('a,button,summary')) return;
+    if (event.target.matches('[data-sound-toggle],[data-feature-tab],[data-feature-prev],[data-feature-next]')) return;
+    playTone();
+  });
+
+  // Handpicked featured stories, not releases. Both projects remain accessible without JS.
+  const showcase = document.querySelector('[data-feature-carousel]');
+  if (showcase) {
+    const slides=[...showcase.querySelectorAll('[data-feature-slide]')];
+    const tabs=[...document.querySelectorAll('[data-feature-tab]')];
+    let current=0;
+    const changeTo = next => {
+      current=(next+slides.length)%slides.length;
+      slides.forEach((slide,index) => {
+        const active=index===current;
+        slide.classList.toggle('is-active',active);
+        slide.inert=!active;
+        if (active) slide.removeAttribute('aria-hidden');
+        else slide.setAttribute('aria-hidden','true');
+      });
+      tabs.forEach((tab,index) => {
+        const active=index===current;
+        tab.classList.toggle('is-selected',active);
+        tab.setAttribute('aria-pressed',String(active));
+      });
+      playTone('change');
+    };
+    tabs.forEach((tab,index) => tab.addEventListener('click',() => changeTo(index)));
+    showcase.querySelector('[data-feature-prev]')?.addEventListener('click',() => changeTo(current-1));
+    showcase.querySelector('[data-feature-next]')?.addEventListener('click',() => changeTo(current+1));
+    tabs.forEach((tab,index) => tab.addEventListener('keydown',event => {
+      if (!['ArrowLeft','ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const next=(index+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+      changeTo(next);
+      tabs[next].focus();
+    }));
+  }
 
   const navToggle = document.querySelector('[data-nav-toggle]');
   const mobileNav = document.querySelector('#mobile-nav');
@@ -71,6 +166,8 @@
     const filters = Object.fromEntries([...form.querySelectorAll('[data-filter]')].map(el => [el.dataset.filter, el]));
     const normalize = text => String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
     const params = new URLSearchParams(location.search);
+    const filterDetails = document.querySelector('[data-filter-details]');
+    if (filterDetails && ['category','platform','status','sort'].some(key => params.has(key))) filterDetails.open = true;
     search.value = params.get('q') || '';
     for (const key of ['category','platform','status','sort']) {
       const value = params.get(key);
@@ -110,6 +207,8 @@
       const plural = { 'pt-BR':'projetos encontrados',en:'projects found',es:'proyectos encontrados' };
       count.textContent = shown + ' ' + (shown === 1 ? singular[locale] : plural[locale]);
       const hasFilters = !!(q || category || platform || status);
+      const filterActive = hasFilters || sort !== 'newest';
+      document.querySelectorAll('.catalog-reset').forEach(button => { button.hidden = !filterActive; });
       if (defaultEmpty) defaultEmpty.hidden = !(items.length === 0 && !hasFilters);
       if (searchEmpty) searchEmpty.hidden = !(shown === 0 && (items.length > 0 || hasFilters));
       const next = new URL(location.href);

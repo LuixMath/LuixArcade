@@ -23,6 +23,8 @@ const iconPaths = {
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>',
   moon: '<path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5 8.7 8.7 0 1 0 20.5 14.1Z"/>',
+  sound: '<path d="m11 5-5 4H3v6h3l5 4V5Z"/><path d="M15 9a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12"/>',
+  mute: '<path d="m11 5-5 4H3v6h3l5 4V5Z"/><path d="m16 9 6 6m0-6-6 6"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   game: '<path d="M6 9h12a4 4 0 0 1 3.7 3l1 5a2.8 2.8 0 0 1-4.5 2.5l-2.3-2H8.1l-2.3 2A2.8 2.8 0 0 1 1.3 17l1-5A4 4 0 0 1 6 9Z"/><path d="M7 11v5m-2.5-2.5h5M16 12h.01M19 14h.01"/>',
   puzzle: '<path d="M3 4h6a2 2 0 1 1 4 0h7v6a2 2 0 1 0 0 4v6h-7a2 2 0 1 0-4 0H3v-6a2 2 0 1 0 0-4V4Z"/>',
@@ -36,6 +38,7 @@ const iconPaths = {
   chevron: '<path d="m9 18 6-6-6-6"/>',
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
   reset: '<path d="M3 11a9 9 0 1 1 2 6m-2 4v-6h6"/>',
+  filter: '<path d="M4 7h16M7 12h10M10 17h4"/>',
   calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/>'
 };
 
@@ -135,6 +138,7 @@ function header(lang,page,slug,t) {
     '<nav class="desktop-nav" aria-label="'+esc(t.nav.categories)+'">'+['home','catalog','about'].map(id=>
       '<a class="nav-item '+(page===id?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(page===id?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
     '<div class="header-tools"><a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+'<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
+    '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(u.soundEnable)+'" title="'+esc(u.soundEnable)+'" data-sound-on-label="'+esc(u.soundDisable)+'" data-sound-off-label="'+esc(u.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
     '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
     localeSelector(lang,page,slug,t)+'</div></div></header>';
 }
@@ -157,13 +161,9 @@ function categoryGrid(lang,t){
     '<span class="category-arrow" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</div>';
 }
 function emptyBanner(lang,t,kind='home'){
-  const atHome=kind==='home';
-  return '<div class="shelf-empty"><div class="shelf-empty-art" aria-hidden="true">'+
-    '<span class="shelf-outline shelf-outline-first"></span><span class="shelf-outline shelf-outline-second"></span><span class="shelf-outline shelf-outline-third"></span></div>'+
-    '<div class="shelf-empty-copy"><span class="empty-kicker">'+esc(t.store.emptyKicker)+'</span>'+
-    '<h3>'+esc(atHome?t.home.featuredEmptyTitle:t.catalog.nothingTitle)+'</h3><p>'+esc(atHome?t.home.featuredEmptyText:t.catalog.nothingText)+'</p></div>'+
-    (atHome?'<a class="shelf-about-link" href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a>':'')+'</div>';
+  return '<div class="catalog-empty-note">'+icon('box')+'<div><strong>'+esc(t.catalog.nothingTitle)+'</strong><p>'+esc(t.catalog.nothingText)+'</p></div></div>';
 }
+
 function home(lang,projects,t){
   return renderHome(lang,projects,t,{esc,icon,link,card,base:BASE});
 }
@@ -175,11 +175,11 @@ function catalog(lang,projects,t){
   const form='<form class="catalog-controls" data-catalog-form>'+
     '<label class="catalog-search-field" for="catalog-search"><span class="sr-only">'+esc(t.ui.searchLabel)+'</span>'+
     icon('search')+'<input id="catalog-search" name="q" type="search" autocomplete="off" placeholder="'+esc(t.ui.searchPlaceholder)+'"></label>'+
-    '<div class="catalog-selects">'+selectFilter(t.catalog.category,'category',categories,t)+selectFilter(t.catalog.platform,'platform',platforms,t)+
+    '<details class="catalog-filter-details" data-filter-details><summary>'+icon('filter')+' '+esc(t.catalog.filterTitle)+icon('chevron')+'</summary><div class="catalog-selects">'+selectFilter(t.catalog.category,'category',categories,t)+selectFilter(t.catalog.platform,'platform',platforms,t)+
     selectFilter(t.catalog.status,'status',stages,t)+
     '<label class="filter-field" for="filter-sort"><span>'+esc(t.catalog.sort)+'</span><select id="filter-sort" data-filter="sort">'+
     '<option value="newest">'+esc(t.catalog.newest)+'</option><option value="oldest">'+esc(t.catalog.oldest)+'</option>'+
-    '<option value="name">'+esc(t.catalog.alphabetical)+'</option></select></label></div></form>';
+    '<option value="name">'+esc(t.catalog.alphabetical)+'</option></select></label></div></details></form>';
   return appShell(lang,'catalog',t,
     '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
     '<header class="library-header"><span class="shelf-overline">'+esc(t.catalog.eyebrow)+'</span><h1>'+esc(t.catalog.title)+'</h1>'+
@@ -228,7 +228,7 @@ function html(lang,page,body,projects,slug=''){
   const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:['project','preview'].includes(page)?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f7f8"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f4f5f7"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(['notFound','preview'].includes(page)?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(page==='preview'?SITE+'media/previews/'+p.cover:SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg?v='+assetRevision)+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css?v='+assetRevision)+'"><script defer src="'+esc(BASE+'app.js?v='+assetRevision)+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);

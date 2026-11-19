@@ -52,9 +52,9 @@ test('Static build renders all three languages without mock projects',async()=>{
     assert.doesNotMatch(html,/data-project-item/);
     assert.doesNotMatch(html,/project-card/);
   }
-  assert.match(await load('en/index.html'),/Projects in progress/);
-  assert.match(await load('es/index.html'),/Proyectos en curso/);
-  assert.match(await load('index.html'),/Projetos em andamento/);
+  assert.match(await load('en/index.html'),/Featured projects/);
+  assert.match(await load('es/index.html'),/Proyectos destacados/);
+  assert.match(await load('index.html'),/Em destaque/);
   assert.doesNotMatch(await load('index.html'),/releases\/download/);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
