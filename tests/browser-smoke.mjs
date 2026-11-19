@@ -69,6 +69,7 @@ async function run(){
   await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Jogos")'));
   await ensure('No placeholder project cards',await evaluate('document.querySelectorAll(".project-card").length===0'));
   await ensure('Desktop has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
+  await ensure('Storefront visual system loaded',await evaluate('getComputedStyle(document.querySelector(".store-hero")).display === "grid" && getComputedStyle(document.querySelector(".store-copy")).position === "relative" && !!document.querySelector("link[href$=\"storefront.css\"]")'));
   await screenshot('desktop-home');
   await viewport(390,844,true);
   await sleep(200);
