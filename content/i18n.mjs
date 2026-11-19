@@ -3,6 +3,20 @@ export const locales = ['pt-BR', 'en', 'es'];
 export const copy = {
   'pt-BR': {
     htmlLang: 'pt-BR', localeLabel: 'Português (Brasil)', localeShort: 'PT', flag: '🇧🇷',
+    store: {
+      "railNavigation": "Navegação do catálogo",
+      "quickAccess": "PRINCIPAL",
+      "allProjects": "Todos os projetos",
+      "platformsTitle": "Plataformas",
+      "railFootnote": "Feito no tempo livre. Compartilhado por diversão.",
+      "libraryName": "BIBLIOTECA LUIX",
+      "freeCollection": "TUDO GRATUITO",
+      "browseHint": "COMECE POR AQUI",
+      "browseHeading": "Explore a biblioteca",
+      "personalLabel": "SOBRE",
+      "platformHint": "Escolha uma plataforma",
+      "emptyKicker": "UM ESPAÇO PARA OS PRÓXIMOS PROJETOS"
+    },
     meta: {
       homeTitle: 'Luix Arcade — jogos, mods e outras criações',
       homeDescription: 'Um espaço pessoal para descobrir jogos, mods, homebrews e ferramentas criados por Luix.',
@@ -26,9 +40,9 @@ export const copy = {
       madeBy: 'Criado por Luix', free: 'Projetos gratuitos'
     },
     home: {
-      eyebrow: 'UMA BIBLIOTECA INDEPENDENTE',
-      heading: 'Jogos, mods e', accent: 'outras criações.',
-      description: 'Um espaço para reunir os jogos, mods, homebrews e ferramentas que faço no tempo livre. Tudo gratuito, sem lançamentos inventados.',
+      eyebrow: 'UM ESPAÇO FEITO POR LUIX',
+      heading: 'Meus projetos,', accent: 'num só lugar.',
+      description: 'Jogos, mods, homebrews e ferramentas que faço no meu tempo livre. Quando estiverem prontos, compartilho tudo por aqui, gratuitamente.',
       heroCta: 'Explorar o catálogo', heroSecondary: 'Conheça o projeto',
       sideNote: 'Projetos feitos no meu tempo livre.',
       sectionKicker: 'DESCUBRA',
@@ -37,7 +51,7 @@ export const copy = {
       featuredKicker: 'NA VITRINE',
       featuredTitle: 'Destaques',
       recentTitle: 'Atualizados recentemente',
-      featuredEmptyTitle: 'A coleção começa aqui.',
+      featuredEmptyTitle: 'Ainda não há projetos publicados.',
       featuredEmptyText: 'Ainda não publiquei nenhum projeto. Quando o primeiro estiver pronto, ele vai aparecer nesta vitrine.',
       emptyCta: 'Conheça o Luix Arcade',
       aboutKicker: 'FEITO COM CURIOSIDADE',
@@ -104,6 +118,20 @@ export const copy = {
   },
   en: {
     htmlLang: 'en', localeLabel: 'English', localeShort: 'EN', flag: '🇺🇸',
+    store: {
+      "railNavigation": "Catalog navigation",
+      "quickAccess": "MAIN MENU",
+      "allProjects": "All projects",
+      "platformsTitle": "Platforms",
+      "railFootnote": "Made in my spare time. Shared for fun.",
+      "libraryName": "THE LUIX LIBRARY",
+      "freeCollection": "ALL FREE",
+      "browseHint": "START HERE",
+      "browseHeading": "Browse the library",
+      "personalLabel": "ABOUT",
+      "platformHint": "Pick a platform",
+      "emptyKicker": "A SPACE FOR WHAT'S NEXT"
+    },
     meta: {
       homeTitle: 'Luix Arcade — games, mods & more',
       homeDescription: 'A home for games, mods, homebrew, and tools made by Luix.',
@@ -127,8 +155,8 @@ export const copy = {
       madeBy: 'Made by Luix', free: 'Free projects'
     },
     home: {
-      eyebrow: 'AN INDEPENDENT LIBRARY',
-      heading: 'Games, mods,', accent: 'and more.',
+      eyebrow: 'MADE AND SHARED BY LUIX',
+      heading: 'My projects,', accent: 'all in one place.',
       description: 'A home for the games, mods, homebrew, and tools I make in my spare time. Always free, and only published when ready.',
       heroCta: 'Explore the library', heroSecondary: 'About this place',
       sideNote: 'Made in my spare time.',
@@ -138,7 +166,7 @@ export const copy = {
       featuredKicker: 'IN THE SPOTLIGHT',
       featuredTitle: 'Featured projects',
       recentTitle: 'Recently updated',
-      featuredEmptyTitle: 'The collection starts here.',
+      featuredEmptyTitle: 'No projects published yet.',
       featuredEmptyText: 'I haven’t published any projects yet. When the first one is ready, you’ll find it here.',
       emptyCta: 'Meet Luix Arcade',
       aboutKicker: 'MADE OUT OF CURIOSITY',
@@ -205,6 +233,20 @@ export const copy = {
   },
   es: {
     htmlLang: 'es', localeLabel: 'Español', localeShort: 'ES', flag: '🇪🇸',
+    store: {
+      "railNavigation": "Navegación del catálogo",
+      "quickAccess": "MENÚ PRINCIPAL",
+      "allProjects": "Todos los proyectos",
+      "platformsTitle": "Plataformas",
+      "railFootnote": "Hecho en mis ratos libres. Compartido por diversión.",
+      "libraryName": "BIBLIOTECA LUIX",
+      "freeCollection": "TODO GRATIS",
+      "browseHint": "EMPIEZA AQUÍ",
+      "browseHeading": "Explora el catálogo",
+      "personalLabel": "ACERCA DE",
+      "platformHint": "Elige una plataforma",
+      "emptyKicker": "UN ESPACIO PARA LOS PRÓXIMOS PROYECTOS"
+    },
     meta: {
       homeTitle: 'Luix Arcade — juegos, mods y mucho más',
       homeDescription: 'Un espacio para descubrir juegos, mods, homebrew y herramientas creados por Luix.',
@@ -228,9 +270,9 @@ export const copy = {
       madeBy: 'Creado por Luix', free: 'Proyectos gratuitos'
     },
     home: {
-      eyebrow: 'UNA BIBLIOTECA INDEPENDIENTE',
-      heading: 'Juegos, mods y', accent: 'otras creaciones.',
-      description: 'Un espacio para los juegos, mods, homebrew y herramientas que creo en mi tiempo libre. Todo gratis y sin anunciar proyectos que aún no existen.',
+      eyebrow: 'UN ESPACIO CREADO POR LUIX',
+      heading: 'Mis proyectos,', accent: 'en un solo lugar.',
+      description: 'Juegos, mods, homebrew y herramientas que creo en mi tiempo libre. Los comparto por aquí cuando están listos, siempre gratis.',
       heroCta: 'Explorar el catálogo', heroSecondary: 'Conoce este espacio',
       sideNote: 'Proyectos hechos en mi tiempo libre.',
       sectionKicker: 'DESCUBRE',
@@ -239,7 +281,7 @@ export const copy = {
       featuredKicker: 'EN PORTADA',
       featuredTitle: 'Proyectos destacados',
       recentTitle: 'Actualizados recientemente',
-      featuredEmptyTitle: 'La colección comienza aquí.',
+      featuredEmptyTitle: 'Todavía no hay proyectos publicados.',
       featuredEmptyText: 'Todavía no he publicado ningún proyecto. Cuando el primero esté listo, aparecerá aquí.',
       emptyCta: 'Conoce Luix Arcade',
       aboutKicker: 'HECHO POR CURIOSIDAD',

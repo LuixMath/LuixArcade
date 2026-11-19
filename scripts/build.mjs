@@ -96,15 +96,40 @@ function link(lang,page,slug='') {return route(lang,page,slug);}
 function localeSelector(lang,page,slug,t) {
   return '<details class="language-switcher"><summary class="icon-action language-summary" aria-label="'+esc(t.ui.language)+'" title="'+esc(t.ui.language)+'">'+icon('globe')+'<span class="language-code">'+esc(t.localeShort)+'</span><span class="mini-chevron">⌄</span></summary><div class="language-list" role="group" aria-label="'+esc(t.ui.language)+'">'+locales.map(x=>'<a data-lang-link="'+esc(x)+'" lang="'+esc(x)+'" href="'+esc(link(x,page,slug))+'" '+(x===lang?'aria-current="page"':'')+'><span class="flag">'+copy[x].flag+'</span><span>'+esc(copy[x].localeLabel)+'</span>'+(x===lang?'<span class="check-symbol" aria-hidden="true">✓</span>':'')+'</a>').join('')+'</div></details>';
 }
+function storeRail(lang,page,t){
+  const cats=['games','mods','homebrew','tools','experiments'].map(c=>
+    '<a class="rail-link" href="'+esc(link(lang,'catalog'))+'?category='+c+'">'+
+    '<span class="rail-icon" aria-hidden="true">'+icon({games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'}[c])+'</span>'+
+    '<span>'+esc(t.categories[c])+'</span></a>').join('');
+  const devices=['3ds','pc','ps2','xbox360','web'].map(v=>
+    '<a class="rail-link rail-device" href="'+esc(link(lang,'catalog'))+'?platform='+v+'">'+
+    '<span class="device-indicator" aria-hidden="true"></span>'+esc(t.platforms[v])+'</a>').join('');
+  return '<aside class="store-rail" aria-label="'+esc(t.store.railNavigation)+'"><nav class="rail-navigation" aria-label="'+esc(t.store.railNavigation)+'">'+
+    '<span class="rail-caption">'+esc(t.store.quickAccess)+'</span>'+
+    '<a class="rail-link rail-primary" href="'+esc(link(lang,'home'))+'" '+(page==='home'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('game')+'</span>'+esc(t.nav.home)+'</a>'+
+    '<a class="rail-link rail-primary" href="'+esc(link(lang,'catalog'))+'" '+(page==='catalog'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('box')+'</span>'+esc(t.store.allProjects)+'</a>'+
+    '<div class="rail-separator"></div><span class="rail-caption">'+esc(t.nav.categories)+'</span>'+cats+
+    '<div class="rail-separator"></div><span class="rail-caption">'+esc(t.store.platformsTitle)+'</span>'+devices+
+    '<div class="rail-separator"></div><a class="rail-link" href="'+esc(link(lang,'about'))+'" '+(page==='about'?'aria-current="page"':'')+'><span class="rail-icon" aria-hidden="true">'+icon('heart')+'</span>'+esc(t.nav.about)+'</a></nav>'+
+    '<p class="rail-footnote">'+esc(t.store.railFootnote)+'</p></aside>';
+}
+function appShell(lang,page,t,content){
+  return '<main id="main"><div class="site-shell app-shell">'+storeRail(lang,page,t)+'<div class="store-main">'+content+'</div></div></main>';
+}
+function mobileDock(lang,page,t){
+  return '<nav class="mobile-dock" aria-label="'+esc(t.nav.categories)+'"><div class="mobile-dock-inner">'+
+  [['home','game'],['catalog','box'],['about','heart']].map(([id,sym])=>
+    '<a href="'+esc(link(lang,id))+'" '+(id===page?'aria-current="page"':'')+'>'+icon(sym)+'<span>'+esc(t.nav[id])+'</span></a>').join('')+
+    '</div></nav>';
+}
 function header(lang,page,slug,t){
   return '<header class="site-header"><div class="site-shell header-inner">'+
-    '<a class="wordmark" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade — '+esc(t.nav.home)+'"><span class="logo-symbol" aria-hidden="true">LA</span><span class="brand-words">Luix<span>Arcade</span></span></a>'+
-    '<nav class="desktop-nav" aria-label="'+esc(t.nav.categories)+'">'+['home','catalog','about'].map(id=>'<a class="nav-item '+(page===id?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(page===id?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
+    '<a class="wordmark" href="'+esc(link(lang,'home'))+'" aria-label="Luix Arcade"><span class="brand-type">luix<span class="brand-dot">.</span></span><span class="brand-second">arcade</span></a>'+
+    '<nav class="desktop-nav" aria-label="'+esc(t.nav.categories)+'">'+['home','catalog','about'].map(id=>
+    '<a class="nav-item '+(id===page?'is-current':'')+'" href="'+esc(link(lang,id))+'" '+(id===page?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</nav>'+
     '<div class="header-tools"><a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+'<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
     '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
-    localeSelector(lang,page,slug,t)+'<button class="icon-action nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="'+esc(t.ui.menu)+'">'+icon('menu')+'</button></div></div>'+
-    '<nav id="mobile-nav" class="mobile-nav" aria-label="'+esc(t.nav.categories)+'" hidden><div class="site-shell"><a href="'+esc(link(lang,'catalog'))+'">'+icon('search')+' '+esc(t.ui.searchLabel)+'</a>'+
-    ['home','catalog','about'].map(id=>'<a href="'+esc(link(lang,id))+'" '+(page===id?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+'</div></nav></header>';
+    localeSelector(lang,page,slug,t)+'</div></div></header>';
 }
 function footer(lang,t){
   return '<footer class="site-footer"><div class="site-shell"><div class="footer-upper"><div class="footer-brand"><span class="footer-mark">'+icon('sparkle')+'</span><div><strong>Luix Arcade</strong><p>'+esc(t.footer.tagline)+'</p></div></div><nav aria-label="'+esc(t.nav.categories)+'"><a href="'+esc(link(lang,'catalog'))+'">'+esc(t.footer.browse)+'</a><a href="'+esc(link(lang,'about'))+'">'+esc(t.footer.about)+'</a><a href="https://github.com/LuixMath" target="_blank" rel="noopener noreferrer">'+esc(t.footer.github)+icon('external')+'</a></nav></div><div class="footer-bottom"><span>© '+new Date().getUTCFullYear()+' Luix Arcade · '+esc(t.footer.rights)+'</span><span>'+esc(t.footer.notice)+'</span></div></div></footer>';
@@ -114,47 +139,93 @@ function card(p,lang,t){
   const cover=p.cover?'<img src="'+esc(mediaUrl(p.cover))+'" alt="'+esc(tr.title)+'" width="640" height="400" loading="lazy" decoding="async">':'<div class="cover-fallback">'+icon(p.category==='games'?'game':p.category==='mods'?'puzzle':p.category==='homebrew'?'chip':p.category==='tools'?'apps':'flask')+'</div>';
   return '<article class="project-card"><a class="card-cover" href="'+esc(link(lang,'project',p.slug))+'">'+cover+'<span class="card-overlay">'+esc(t.ui.readMore)+' '+icon('arrow')+'</span></a><div class="card-info"><div class="card-kicker">'+esc(t.categories[p.category])+' <span aria-hidden="true">·</span> '+esc(t.stages[p.status])+'</div><h3><a href="'+esc(link(lang,'project',p.slug))+'">'+esc(tr.title)+'</a></h3><p>'+esc(tr.summary)+'</p><div class="card-foot">'+p.platforms.map(x=>'<span class="platform-tag">'+esc(t.platforms[x])+'</span>').join('')+'</div></div></article>';
 }
-function categoryGrid(lang,t,items){
-  const icons={games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'};
-  return '<div class="category-grid">'+categories.map((c,i)=>'<a class="category-tile category-'+c+'" href="'+esc(link(lang,'catalog'))+'?category='+encodeURIComponent(c)+'"><span class="category-illustration">'+icon(icons[c])+'</span><span class="category-content"><strong>'+esc(t.categories[c])+'</strong><small>'+esc(t.categoryDescriptions[c])+'</small></span><span class="category-arrow">'+icon('arrow')+'</span></a>').join('')+'</div>';
+function categoryGrid(lang,t){
+  const catIcons={games:'game',mods:'puzzle',homebrew:'chip',tools:'apps',experiments:'flask'};
+  return '<div class="category-grid">'+categories.map((category,index)=>
+    '<a class="category-tile category-'+category+'" href="'+esc(link(lang,'catalog'))+'?category='+category+'">'+
+    '<span class="category-top"><span class="category-illustration" aria-hidden="true">'+icon(catIcons[category])+'</span>'+
+    '<span class="category-index" aria-hidden="true">'+String(index+1).padStart(2,'0')+'</span></span>'+
+    '<span class="category-content"><strong>'+esc(t.categories[category])+'</strong><small>'+esc(t.categoryDescriptions[category])+'</small></span>'+
+    '<span class="category-arrow" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</div>';
 }
 function emptyBanner(lang,t,kind='home'){
-  const home=kind==='home', p=home?t.home:t.catalog;
-  return '<div class="empty-banner"><div class="empty-art" aria-hidden="true"><span class="empty-art-monogram">LA</span><span class="empty-art-line"></span></div>'+
-    '<div class="empty-copy"><span class="eyebrow">'+esc(home?t.home.featuredKicker:t.catalog.eyebrow)+'</span><h3>'+esc(home?p.featuredEmptyTitle:p.nothingTitle)+'</h3>'+
-    '<p>'+esc(home?p.featuredEmptyText:p.nothingText)+'</p>'+(home?'<a class="inline-link" href="'+esc(link(lang,'about'))+'">'+esc(t.home.emptyCta)+' '+icon('arrow')+'</a>':'')+'</div></div>';
+  const atHome=kind==='home';
+  return '<div class="shelf-empty"><div class="shelf-empty-art" aria-hidden="true">'+
+    '<span class="shelf-outline shelf-outline-first"></span><span class="shelf-outline shelf-outline-second"></span><span class="shelf-outline shelf-outline-third"></span></div>'+
+    '<div class="shelf-empty-copy"><span class="empty-kicker">'+esc(t.store.emptyKicker)+'</span>'+
+    '<h3>'+esc(atHome?t.home.featuredEmptyTitle:t.catalog.nothingTitle)+'</h3><p>'+esc(atHome?t.home.featuredEmptyText:t.catalog.nothingText)+'</p></div>'+
+    (atHome?'<a class="shelf-about-link" href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a>':'')+'</div>';
 }
 function home(lang,projects,t){
-  const featured=projects.filter(p=>p.featured).slice(0,4);
-  const recent=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,4);
-  return '<main id="main"><div class="site-shell"><section class="store-hero">'+
-    '<div class="store-copy"><div class="store-hero-label"><span class="label-glyph" aria-hidden="true">✳</span>'+esc(t.home.eyebrow)+'</div>'+
+  const featured=projects.filter(p=>p.featured).slice(0,6);
+  const latest=[...projects].sort((a,b)=>b.updated.localeCompare(a.updated)).slice(0,6);
+  const devices=['3ds','pc','ps2','xbox360','web'];
+  return appShell(lang,'home',t,
+    '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
+    '<section class="editorial-grid" aria-label="'+esc(t.home.eyebrow)+'">'+
+    '<div class="editorial-main"><div class="editorial-copy"><span class="editorial-kicker">'+esc(t.home.eyebrow)+'</span>'+
     '<h1>'+esc(t.home.heading)+' <em>'+esc(t.home.accent)+'</em></h1><p>'+esc(t.home.description)+'</p>'+
-    '<div class="store-actions"><a class="button store-main-cta" href="'+esc(link(lang,'catalog'))+'">'+esc(t.home.heroCta)+' '+icon('arrow')+'</a>'+
-    '<a class="button store-secondary-cta" href="'+esc(link(lang,'about'))+'">'+esc(t.home.heroSecondary)+'</a></div>'+
-    '<div class="store-byline">'+icon('heart')+' '+esc(t.home.sideNote)+'</div></div>'+
-    '<div class="store-visual" aria-hidden="true"><div class="store-art-top"><span>LA / 001</span><span>EST. 2026</span></div>'+
-    '<div class="store-disc"><span class="store-disc-letter">L<span>A</span></span><span class="store-disc-ring"></span></div>'+
-    '<div class="store-art-bottom"><span>Luix Arcade</span><span class="art-stars">✳ &nbsp; ✳ &nbsp; ✳</span></div></div></section>'+
-    '<section class="section categories-section" id="categories"><div class="section-heading"><div><span class="eyebrow">'+esc(t.home.sectionKicker)+'</span>'+
-    '<h2>'+esc(t.home.categoriesTitle)+'</h2><p>'+esc(t.home.categoriesDescription)+'</p></div>'+
-    '<a class="text-link" href="'+esc(link(lang,'catalog'))+'">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a></div>'+categoryGrid(lang,t,projects)+'</section>'+
-    '<section class="section spotlight-section"><div class="section-heading"><div><span class="eyebrow">'+esc(t.home.featuredKicker)+'</span>'+
-    '<h2>'+esc(t.home.featuredTitle)+'</h2></div>'+(featured.length?'<a class="text-link" href="'+esc(link(lang,'catalog'))+'">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a>':'')+'</div>'+
+    '<a class="editorial-cta" href="'+esc(link(lang,'catalog'))+'">'+esc(t.home.heroCta)+' '+icon('arrow')+'</a></div>'+
+    '<div class="editorial-art" aria-hidden="true"><img src="'+BASE+'arcade-feature.svg" width="480" height="440" alt="" decoding="async"></div></div>'+
+    '<div class="editorial-side"><a class="side-feature side-feature-catalog" href="'+esc(link(lang,'catalog'))+'">'+
+    '<span class="side-feature-overline">'+esc(t.store.browseHint)+'</span><span class="side-feature-title">'+esc(t.store.browseHeading)+'</span>'+
+    '<span class="side-feature-symbol" aria-hidden="true">'+icon('game')+'</span><span class="side-feature-arrow">'+icon('arrow')+'</span></a>'+
+    '<a class="side-feature side-feature-about" href="'+esc(link(lang,'about'))+'">'+
+    '<span class="side-feature-overline">'+esc(t.store.personalLabel)+'</span><span class="side-feature-title">'+esc(t.home.aboutTitle)+'</span>'+
+    '<span class="side-feature-symbol" aria-hidden="true">'+icon('heart')+'</span><span class="side-feature-arrow">'+icon('arrow')+'</span></a></div></section>'+
+    '<section class="platform-row" aria-label="'+esc(t.store.platformsTitle)+'"><div class="platform-row-label"><strong>'+esc(t.store.platformsTitle)+'</strong>'+
+    '<small>'+esc(t.store.platformHint)+'</small></div><div class="platform-track">'+devices.map(v=>
+      '<a href="'+esc(link(lang,'catalog'))+'?platform='+v+'">'+esc(t.platforms[v])+icon('arrow')+'</a>').join('')+'</div></section>'+
+    '<section class="shelf-section"><div class="shelf-heading"><div><span class="shelf-overline">'+esc(t.home.sectionKicker)+'</span>'+
+    '<h2>'+esc(t.home.categoriesTitle)+'</h2></div><a href="'+esc(link(lang,'catalog'))+'" class="shelf-more">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a></div>'+
+    categoryGrid(lang,t)+'</section>'+
+    '<section class="shelf-section"><div class="shelf-heading"><div><span class="shelf-overline">'+esc(t.home.featuredKicker)+'</span>'+
+    '<h2>'+esc(t.home.featuredTitle)+'</h2></div>'+(featured.length?'<a href="'+esc(link(lang,'catalog'))+'" class="shelf-more">'+esc(t.ui.viewAll)+' '+icon('arrow')+'</a>':'')+'</div>'+
     (featured.length?'<div class="project-grid">'+featured.map(p=>card(p,lang,t)).join('')+'</div>':emptyBanner(lang,t))+'</section>'+
-    (recent.length?'<section class="section"><div class="section-heading"><h2>'+esc(t.home.recentTitle)+'</h2></div><div class="project-grid">'+recent.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
-    '<section class="about-strip"><div class="about-strip-icon" aria-hidden="true">LA</div><div><span class="eyebrow">'+esc(t.home.aboutKicker)+'</span>'+
-    '<h2>'+esc(t.home.aboutTitle)+'</h2><p>'+esc(t.home.aboutText)+'</p><a class="text-link" href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a></div></section></div></main>';
+    (latest.length?'<section class="shelf-section"><div class="shelf-heading"><h2>'+esc(t.home.recentTitle)+'</h2></div>'+
+    '<div class="project-grid">'+latest.map(p=>card(p,lang,t)).join('')+'</div></section>':'')+
+    '<section class="closing-strip"><div><strong>'+esc(t.home.aboutTitle)+'</strong><p>'+esc(t.home.aboutText)+'</p></div>'+
+    '<a href="'+esc(link(lang,'about'))+'">'+esc(t.home.aboutLink)+' '+icon('arrow')+'</a></section>'
+  );
 }
 function selectFilter(label,id,values,t) {
   return '<label class="filter-field" for="filter-'+id+'"><span>'+esc(label)+'</span><select id="filter-'+id+'" data-filter="'+id+'"><option value="">'+esc(t.ui.all)+'</option>'+values.map(v=>'<option value="'+esc(v)+'">'+esc(id==='category'?t.categories[v]:id==='platform'?t.platforms[v]:t.stages[v])+'</option>').join('')+'</select></label>';
 }
 function catalog(lang,projects,t){
-  return '<main id="main"><div class="site-shell"><div class="catalog-intro"><div><span class="eyebrow">'+esc(t.catalog.eyebrow)+'</span><h1>'+esc(t.catalog.title)+'</h1><p>'+esc(t.catalog.description)+'</p></div><div class="catalog-decoration" aria-hidden="true">'+icon('game')+'</div></div><div class="catalog-layout"><aside class="filters-panel"><div class="filters-heading"><h2>'+icon('apps')+' '+esc(t.catalog.filterTitle)+'</h2><button type="button" class="filter-clear" data-reset>'+esc(t.ui.clear)+'</button></div><form data-catalog-form><label class="filter-field" for="catalog-search"><span>'+esc(t.ui.searchLabel)+'</span><span class="search-field">'+icon('search')+'<input id="catalog-search" name="q" type="search" autocomplete="off" placeholder="'+esc(t.ui.searchPlaceholder)+'"></span></label>'+selectFilter(t.catalog.category,'category',categories,t)+selectFilter(t.catalog.platform,'platform',platforms,t)+selectFilter(t.catalog.status,'status',stages,t)+'<label class="filter-field" for="filter-sort"><span>'+esc(t.catalog.sort)+'</span><select id="filter-sort" data-filter="sort"><option value="newest">'+esc(t.catalog.newest)+'</option><option value="oldest">'+esc(t.catalog.oldest)+'</option><option value="name">'+esc(t.catalog.alphabetical)+'</option></select></label></form></aside><section class="catalog-results" aria-live="polite"><div class="catalog-results-header"><span class="results-number" data-result-count>'+projects.length+' '+esc(projects.length===1?t.ui.result:t.ui.results)+'</span></div><div class="project-grid catalog-grid" data-project-grid>'+projects.map(p=>'<div data-project-item data-title="'+esc(p.translations[lang].title+' '+p.translations[lang].summary)+'" data-category="'+esc(p.category)+'" data-status="'+esc(p.status)+'" data-platforms="'+esc(p.platforms.join(' '))+'" data-updated="'+esc(p.updated)+'">'+card(p,lang,t)+'</div>').join('')+'</div><div data-empty-default '+(projects.length?'hidden':'')+'>'+emptyBanner(lang,t,'catalog')+'</div><div class="empty-search" data-empty-search hidden><div class="empty-art">'+icon('search')+'</div><h2>'+esc(t.catalog.noMatchTitle)+'</h2><p>'+esc(t.catalog.noMatchText)+'</p><button class="button button-primary" type="button" data-reset>'+esc(t.catalog.reset)+'</button></div></section></div></div></main>';
+  const form='<form class="catalog-controls" data-catalog-form>'+
+    '<label class="catalog-search-field" for="catalog-search"><span class="sr-only">'+esc(t.ui.searchLabel)+'</span>'+
+    icon('search')+'<input id="catalog-search" name="q" type="search" autocomplete="off" placeholder="'+esc(t.ui.searchPlaceholder)+'"></label>'+
+    '<div class="catalog-selects">'+selectFilter(t.catalog.category,'category',categories,t)+selectFilter(t.catalog.platform,'platform',platforms,t)+
+    selectFilter(t.catalog.status,'status',stages,t)+
+    '<label class="filter-field" for="filter-sort"><span>'+esc(t.catalog.sort)+'</span><select id="filter-sort" data-filter="sort">'+
+    '<option value="newest">'+esc(t.catalog.newest)+'</option><option value="oldest">'+esc(t.catalog.oldest)+'</option>'+
+    '<option value="name">'+esc(t.catalog.alphabetical)+'</option></select></label></div></form>';
+  return appShell(lang,'catalog',t,
+    '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.store.freeCollection)+'</span></div>'+
+    '<header class="library-header"><span class="shelf-overline">'+esc(t.catalog.eyebrow)+'</span><h1>'+esc(t.catalog.title)+'</h1>'+
+    '<p>'+esc(t.catalog.description)+'</p></header>'+form+
+    '<div class="catalog-result-bar"><span data-result-count>'+projects.length+' '+esc(projects.length===1?t.ui.result:t.ui.results)+'</span>'+
+    '<button class="catalog-reset" type="button" data-reset>'+esc(t.ui.clear)+' '+icon('reset')+'</button></div>'+
+    '<section class="catalog-results" aria-live="polite"><div class="project-grid catalog-grid" data-project-grid>'+
+    projects.map(p=>'<div data-project-item data-title="'+esc(p.translations[lang].title+' '+p.translations[lang].summary)+'" data-category="'+esc(p.category)+
+    '" data-status="'+esc(p.status)+'" data-platforms="'+esc(p.platforms.join(' '))+'" data-updated="'+esc(p.updated)+'">'+card(p,lang,t)+'</div>').join('')+'</div>'+
+    '<div data-empty-default '+(projects.length?'hidden':'')+'>'+emptyBanner(lang,t,'catalog')+'</div>'+
+    '<div class="empty-search" data-empty-search hidden><div class="empty-search-mark" aria-hidden="true">'+icon('search')+'</div>'+
+    '<h2>'+esc(t.catalog.noMatchTitle)+'</h2><p>'+esc(t.catalog.noMatchText)+'</p>'+
+    '<button class="button button-primary" type="button" data-reset>'+esc(t.catalog.reset)+'</button></div></section>'
+  );
 }
 function about(lang,t){
   const a=t.about;
-  return '<main id="main"><div class="site-shell"><section class="about-hero"><div class="about-hero-content"><span class="eyebrow eyebrow-light">'+esc(a.eyebrow)+'</span><h1>'+esc(a.title)+'</h1><p>'+esc(a.lead)+'</p></div><div class="about-hero-shape" aria-hidden="true">'+icon('sparkle')+'</div></section><div class="about-body"><article class="about-story"><section><h2>'+esc(a.heading1)+'</h2><p>'+esc(a.para1)+'</p></section><section><h2>'+esc(a.heading2)+'</h2><p>'+esc(a.para2)+'</p></section><section><h2>'+esc(a.heading3)+'</h2><p>'+esc(a.para3)+'</p></section><p class="about-closing">'+esc(a.ending)+'</p><a class="button button-primary" href="'+esc(link(lang,'catalog'))+'">'+esc(t.home.heroCta)+' '+icon('arrow')+'</a></article><aside class="about-aside"><div class="aside-icon">'+icon('heart')+'</div><h2>'+esc(a.asideTitle)+'</h2><p>'+esc(a.asideText)+'</p></aside></div></div></main>';
+  return appShell(lang,'about',t,
+    '<div class="page-meta"><span>'+esc(t.store.libraryName)+'</span><span>'+esc(t.nav.about)+'</span></div>'+
+    '<header class="about-intro"><span class="shelf-overline">'+esc(a.eyebrow)+'</span><h1>'+esc(a.title)+'</h1><p>'+esc(a.lead)+'</p></header>'+
+    '<div class="about-reading"><article class="about-story"><section><h2>'+esc(a.heading1)+'</h2><p>'+esc(a.para1)+'</p></section>'+
+    '<section><h2>'+esc(a.heading2)+'</h2><p>'+esc(a.para2)+'</p></section>'+
+    '<section><h2>'+esc(a.heading3)+'</h2><p>'+esc(a.para3)+'</p></section>'+
+    '<p class="about-closing">'+esc(a.ending)+'</p><a class="editorial-cta" href="'+esc(link(lang,'catalog'))+'">'+esc(t.home.heroCta)+' '+icon('arrow')+'</a></article>'+
+    '<aside class="about-note"><span class="about-note-sign">luix.</span><h2>'+esc(a.asideTitle)+'</h2><p>'+esc(a.asideText)+'</p></aside></div>'
+  );
 }
 function listBlock(title,items){return items?.length?'<section class="detail-block"><h2>'+esc(title)+'</h2><ul class="detail-list">'+items.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></section>':'';}
 function projectPage(lang,p,t){
@@ -177,7 +248,7 @@ function html(lang,page,body,projects,slug=''){
   const desc=page==='home'?t.meta.homeDescription:page==='catalog'?t.meta.catalogDescription:page==='about'?t.meta.aboutDescription:page==='project'?p.translations[lang].summary:t.notFound.description;
   const canon=ORIGIN+route(lang,page,slug);
   const alternates=page!=='notFound'?locales.map(l=>'<link rel="alternate" hreflang="'+esc(l)+'" href="'+esc(ORIGIN+route(l,page,slug))+'">').join('')+'<link rel="alternate" hreflang="x-default" href="'+esc(ORIGIN+route('pt-BR',page,slug))+'">':'';
-  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f8fc"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(page==='notFound'?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg')+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css')+'"><link rel="stylesheet" href="'+esc(BASE+'storefront.css')+'"><script defer src="'+esc(BASE+'app.js')+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+'</body></html>';
+  return '<!doctype html><html lang="'+esc(t.htmlLang)+'" data-site-base="'+esc(BASE)+'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f6f8fc"><meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\'; style-src \'self\'; img-src \'self\' https: data:; connect-src \'self\' https://api.github.com; font-src \'self\'; object-src \'none\'; base-uri \'self\'; form-action \'self\'; upgrade-insecure-requests"><title>'+esc(title)+'</title><meta name="description" content="'+esc(desc)+'"><meta name="robots" content="'+(page==='notFound'?'noindex,follow':'index,follow')+'"><link rel="canonical" href="'+esc(canon)+'">'+alternates+'<meta property="og:type" content="website"><meta property="og:site_name" content="Luix Arcade"><meta property="og:locale" content="'+esc(lang==='pt-BR'?'pt_BR':lang==='en'?'en_US':'es_ES')+'"><meta property="og:title" content="'+esc(title)+'"><meta property="og:description" content="'+esc(desc)+'"><meta property="og:url" content="'+esc(canon)+'"><meta property="og:image" content="'+esc(SITE+'og-preview.svg')+'"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="'+esc(BASE+'favicon.svg')+'" type="image/svg+xml"><link rel="stylesheet" href="'+esc(BASE+'styles.css')+'"><script defer src="'+esc(BASE+'app.js')+'"></script></head><body data-locale="'+esc(lang)+'" data-page="'+esc(page)+'"><a class="skip-link" href="#main">'+esc(t.ui.skip)+'</a>'+header(lang,page,slug,t)+body+footer(lang,t)+mobileDock(lang,page,t)+'</body></html>';
 }
 async function write(relative,contents){
   const destination=path.join(out,relative);
@@ -187,7 +258,7 @@ async function write(relative,contents){
 async function build(){
   const projects=projectValidate(JSON.parse(await readFile(path.join(root,'content/projects.json'),'utf8')));
   await mkdir(out,{recursive:true});
-  for(const file of ['styles.css','storefront.css','app.js','favicon.svg','hero-art.svg','og-preview.svg']){
+  for(const file of ['styles.css','app.js','favicon.svg','arcade-feature.svg','og-preview.svg']){
     await cp(path.join(root,'public',file),path.join(out,file));
   }
   await write('.nojekyll','');
@@ -208,4 +279,4 @@ async function build(){
   console.log('Built '+routes.length+' localized routes ('+projects.length+' projects) at '+BASE);
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))build().catch(error=>{console.error(error);process.exitCode=1;});
-export {build,route};
+export {build,route,card,projectPage,catalog};

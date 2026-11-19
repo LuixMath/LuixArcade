@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const browser=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].find(existsSync);
+const browser=[process.env.CHROME_PATH,'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe','C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe','/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser'].filter(Boolean).find(existsSync);
 if(!browser) throw new Error('Chrome/Chromium is required for the visual smoke test.');
 const port=4189;
 const local='http://127.0.0.1:'+port+'/LuixArcade/';
@@ -20,7 +20,7 @@ async function until(check,tries=80,delay=150){
 }
 async function run(){
   await until(async()=>{const r=await fetch(local);return r.ok;});
-  chrome=spawn(browser,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--hide-scrollbars','--remote-debugging-port=9237','--user-data-dir=/tmp/luix-browser-'+process.pid,'--window-size=1280,800','about:blank'],{stdio:'ignore'});
+  chrome=spawn(browser,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage','--hide-scrollbars','--remote-debugging-port=9237','--user-data-dir='+path.join(process.env.TEMP || '/tmp','luix-browser-'+process.pid),'--window-size=1280,800','about:blank'],{stdio:'ignore'});
   const page=await until(async()=>{const r=await fetch('http://127.0.0.1:9237/json/list');const pages=await r.json();return pages.find(x=>x.type==='page'&&x.webSocketDebuggerUrl);});
   ws=new WebSocket(page.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true});});
@@ -66,18 +66,22 @@ async function run(){
   await send('Runtime.enable');
   await viewport(1280,800,false);
   await visit(local);
-  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Jogos")'));
+  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Meus projetos")'));
   await ensure('No placeholder project cards',await evaluate('document.querySelectorAll(".project-card").length===0'));
   await ensure('Desktop has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
-  await ensure('Storefront visual system loaded',await evaluate('getComputedStyle(document.querySelector(".store-hero")).display === "grid" && getComputedStyle(document.querySelector(".store-copy")).position === "relative" && document.querySelectorAll("link[rel=stylesheet]").length === 2'));
+  await ensure('Storefront visual system loaded',await evaluate('getComputedStyle(document.querySelector(".editorial-grid")).display === "grid" && document.querySelectorAll("link[rel=stylesheet]").length === 1'));
   await screenshot('desktop-home');
+  await visit(local+'catalogo/');
+  await screenshot('desktop-catalog-empty');
+  await visit(local);
   await viewport(390,844,true);
   await sleep(200);
   await ensure('Mobile has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
-  await ensure('Mobile layout adapts',await evaluate('getComputedStyle(document.querySelector(".category-grid")).gridTemplateColumns.split(" ").length === 2'));
+  await ensure('Mobile layout adapts',await evaluate('getComputedStyle(document.querySelector(".category-grid")).gridAutoFlow === "column" && getComputedStyle(document.querySelector(".mobile-dock")).display !== "none"'));
   await screenshot('mobile-home');
+  await ensure('Mobile dock visible',await evaluate('getComputedStyle(document.querySelector(".mobile-dock")).display !== "none"'));
   await evaluate('document.querySelector("[data-theme-toggle]").click()');
-  await screenshot('mobile-home-dark');
+  await screenshot('mobile-home-alternate-theme');
   await ensure('Theme toggle changes theme',await evaluate('["dark","light"].includes(document.documentElement.dataset.theme)'));
   await visit(local+'catalogo/');
   await ensure('Catalog stays empty',await evaluate('document.querySelectorAll("[data-project-item]").length===0 && !document.querySelector("[data-empty-default]").hidden'));

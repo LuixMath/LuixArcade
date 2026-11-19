@@ -12,10 +12,13 @@
   const storedTheme = safeStore.get('luix-theme');
   if (storedTheme === 'light' || storedTheme === 'dark') root.dataset.theme = storedTheme;
   const currentTheme = () => root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#101827' : '#f5f7fa');
+  syncThemeColor();
   document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
     root.dataset.theme = next;
     safeStore.set('luix-theme', next);
+    syncThemeColor();
   });
 
   const navToggle = document.querySelector('[data-nav-toggle]');
@@ -79,6 +82,15 @@
       const platform = filters.platform.value;
       const status = filters.status.value;
       const sort = filters.sort.value;
+      const railLinks = [...document.querySelectorAll('.store-rail .rail-link')];
+      railLinks.forEach(anchor => anchor.removeAttribute('aria-current'));
+      const chosen = railLinks.find(anchor => {
+        const url = new URL(anchor.href);
+        return category ? url.searchParams.get('category') === category
+          : platform ? url.searchParams.get('platform') === platform
+          : url.pathname === location.pathname && !url.search;
+      });
+      chosen?.setAttribute('aria-current', 'page');
       let shown = 0;
       for (const item of items) {
         const matches = (!q || normalize(item.dataset.title).includes(q))
