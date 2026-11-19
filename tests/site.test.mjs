@@ -52,9 +52,10 @@ test('Static build renders all three languages without mock projects',async()=>{
     assert.doesNotMatch(html,/data-project-item/);
     assert.doesNotMatch(html,/project-card/);
   }
-  assert.match(await load('en/index.html'),/Nothing available to download yet/);
-  assert.match(await load('es/index.html'),/Todavía no hay versiones para descargar/);
-  assert.match(await load('index.html'),/Ainda não há lançamentos para baixar/);
+  assert.match(await load('en/index.html'),/Projects in progress/);
+  assert.match(await load('es/index.html'),/Proyectos en curso/);
+  assert.match(await load('index.html'),/Projetos em andamento/);
+  assert.doesNotMatch(await load('index.html'),/releases\/download/);
   assert.match(await load('en/about/index.html'),/AI has been a big help/);
   assert.match(await load('es/acerca/index.html'),/inteligencia artificial/);
   assert.match(await load('sitemap.xml'),/LuixArcade\/es\/acerca/);

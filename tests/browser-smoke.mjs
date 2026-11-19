@@ -69,13 +69,13 @@ async function run(){
   await send('Runtime.enable');
   await viewport(1280,800,false);
   await visit(local);
-  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.includes("Jogos e ideias")'));
+  await ensure('Portuguese storefront',await evaluate('document.documentElement.lang==="pt-BR" && document.querySelector("h1").textContent.trim()==="Luix Arcade"'));
   await ensure('No placeholder project cards',await evaluate('document.querySelectorAll(".project-card").length===0'));
   await ensure('Desktop has no horizontal overflow',await evaluate('document.documentElement.scrollWidth <= innerWidth+2'));
   await ensure('Storefront visual system loaded',await evaluate('getComputedStyle(document.querySelector(".showcase-grid")).display === "grid" && document.querySelectorAll("link[rel=stylesheet]").length === 1'));
   await screenshot('desktop-home');
   await evaluate('document.documentElement.dataset.theme="light"');
-  await ensure('Light theme contrast tokens available',await evaluate('getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim()==="#f6f7f8"'));
+  await ensure('Light theme contrast tokens available',await evaluate('getComputedStyle(document.documentElement).getPropertyValue("--canvas").trim()==="#f4f5f7"'));
   await screenshot('desktop-home-light');
   await visit(local+'projeto/crystal3ds/');
   await ensure('Crystal3DS editorial is a draft',await evaluate('document.querySelector(".edition-crystal") && !document.querySelector("[href*=releases]")'));
