@@ -12,7 +12,7 @@
   const storedTheme = safeStore.get('luix-theme');
   if (storedTheme === 'light' || storedTheme === 'dark') root.dataset.theme = storedTheme;
   const currentTheme = () => root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#12191c' : '#f8faf9');
+  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]')?.setAttribute('content', currentTheme() === 'dark' ? '#090d1a' : '#f5f6ff');
   syncThemeColor();
   document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -207,3 +207,4 @@
     dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
   }
 })();
+

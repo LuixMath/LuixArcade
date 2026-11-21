@@ -258,3 +258,4 @@ async function build(){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))build().catch(error=>{console.error(error);process.exitCode=1;});
 export {build,route,card,projectPage,catalog};
+

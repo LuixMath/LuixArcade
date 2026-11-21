@@ -14,10 +14,10 @@ function previewCard(lang,p,i,{esc,link,base}){
   const e=editorial[lang],c=e[p.type];
   const url=esc(link(lang,'preview',p.slug));
   return '<article class="cover-card cover-'+p.type+'">'+
-    '<a class="cover-art" href="'+url+'">'+
-      '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'')+'>'+
+    '<a class="cover-art '+(i===0?'cover-art-primary':'cover-art-secondary')+'" href="'+url+'">'+
+      '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'>'+
       '<div class="cover-under"><div class="cover-name">'+
-        '<span class="cover-platform">'+esc(p.platform)+'</span>'+
+        '<span class="cover-platform">'+esc(p.platform)+' · '+esc(e.draftStage)+'</span>'+
         '<h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle)+'</p>'+
         '<span class="cover-action">'+esc(e.openStory)+'</span></div></div>'+
     '</a></article>';
@@ -26,10 +26,10 @@ export function renderHome(lang,projects,t,helpers){
   const e=editorial[lang],u=e.shop,{esc,icon,link,card}=helpers;
   const published=projects.filter(p=>p.featured).slice(0,6);
   return '<main id="main" class="arcade-home"><div class="site-shell">'+
-    '<header class="home-heading"><h1 id="home-title">'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeSubtitle)+'</p></header>'+
+    '<header class="home-heading"><div><span class="section-kicker">'+esc(u.masthead)+'</span><h1 id="home-title">Luix Arcade</h1></div><p>'+esc(u.homeSubtitle)+'</p></header>'+
     '<section class="featured-gallery" aria-labelledby="gallery-title"><div class="section-line">'+
       '<h2 id="gallery-title">'+esc(u.featureTitle)+'</h2>'+
-      '<span class="section-aside">'+esc(e.draftStage)+'</span></div>'+
+      '<span class="section-aside">'+esc(u.featureNote)+'</span></div>'+
       '<div class="cover-gallery">'+previewProjects.map((p,i)=>previewCard(lang,p,i,helpers)).join('')+'</div>'+
       '<p class="art-disclaimer">'+icon('info')+esc(e.artLabel)+'</p></section>'+
     '<section class="shop-directory" aria-labelledby="directory-title"><div class="section-line">'+
@@ -97,3 +97,4 @@ function renderEchoes(lang,p,t,helpers){
     '</article>'+projectReturn(lang,e,helpers)+'</div></main>';
 }
 export function renderPreview(lang,p,t,helpers){return p.type==='echoes'?renderEchoes(lang,p,t,helpers):renderCrystal(lang,p,t,helpers);}
+
