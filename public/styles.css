@@ -657,8 +657,8 @@ img,svg{display:block;max-width:100%}
 /* Luix Arcade visual direction: a vivid, structured game library. */
 :root {
  color-scheme: light;
- --canvas:#f5f6ff;
- --surface:#ffffff;
+ --canvas:#f8faf9;
+ --surface:#fff;
  --surface-alt:#edf0ff;
  --paper:#ffffff;
  --paper-2:#edf0ff;
@@ -691,8 +691,8 @@ img,svg{display:block;max-width:100%}
 }
 :root[data-theme="light"] {
  color-scheme:light;
- --canvas:#f5f6ff;
- --surface:#ffffff;
+ --canvas:#f8faf9;
+ --surface:#fff;
  --surface-alt:#edf0ff;
  --paper:#ffffff;
  --paper-2:#edf0ff;

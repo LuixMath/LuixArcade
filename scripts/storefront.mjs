@@ -26,7 +26,7 @@ export function renderHome(lang,projects,t,helpers){
   const e=editorial[lang],u=e.shop,{esc,icon,link,card}=helpers;
   const published=projects.filter(p=>p.featured).slice(0,6);
   return '<main id="main" class="arcade-home"><div class="site-shell">'+
-    '<header class="home-heading"><div><span class="section-kicker">'+esc(u.masthead)+'</span><h1 id="home-title">Luix Arcade</h1></div><p>'+esc(u.homeSubtitle)+'</p></header>'+
+    '<header class="home-heading"><div><span class="section-kicker">'+esc(u.masthead)+'</span><h1 id="home-title">'+esc(u.homeTitle)+'</h1></div><p>'+esc(u.homeSubtitle)+'</p></header>'+
     '<section class="featured-gallery" aria-labelledby="gallery-title"><div class="section-line">'+
       '<h2 id="gallery-title">'+esc(u.featureTitle)+'</h2>'+
       '<span class="section-aside">'+esc(u.featureNote)+'</span></div>'+
