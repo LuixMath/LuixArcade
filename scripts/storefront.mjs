@@ -8,27 +8,25 @@ export function renderCategoryShelf(lang,t,{esc,icon,link}){
   return '<nav class="directory-grid" aria-label="'+esc(t.nav.categories)+'">'+groups.map(id=>
     '<a class="directory-link" href="'+esc(link(lang,'catalog'))+'?category='+id+'">'+
     '<span class="directory-icon" aria-hidden="true">'+icon(icons[id])+'</span>'+
-    '<span class="directory-name">'+esc(t.categories[id])+'</span>'+
-    '<span class="directory-next" aria-hidden="true">'+icon('arrow')+'</span></a>').join('')+'</nav>';
+    '<span class="directory-name">'+esc(t.categories[id])+'</span></a>').join('')+'</nav>';
 }
-function previewCard(lang,p,i,{esc,icon,link,base}){
+function previewCard(lang,p,i,{esc,link,base}){
   const e=editorial[lang],c=e[p.type];
   const url=esc(link(lang,'preview',p.slug));
   return '<article class="cover-card cover-'+p.type+'">'+
-    '<a class="cover-art" href="'+url+'" aria-label="'+esc(c.title)+' — '+esc(e.openStory)+'">'+
-       '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'></a>'+
-    '<div class="cover-under"><div class="cover-name">'+
-      '<h3><a href="'+url+'">'+esc(c.title)+'</a></h3>'+
-      '<p>'+esc(c.subtitle)+'</p></div>'+
-      '<a class="cover-read" href="'+url+'" aria-label="'+esc(e.openStory)+' — '+esc(c.title)+'">'+icon('arrow')+'</a></div>'+
-    '</article>';
+    '<a class="cover-art '+(i===0?'cover-art-primary':'cover-art-secondary')+'" href="'+url+'">'+
+      '<img src="'+esc(featuredImage(base,p))+'" alt="" width="1440" height="900" decoding="async" '+(i===0?'fetchpriority="high"':'loading="lazy"')+'>'+
+      '<div class="cover-under"><div class="cover-name">'+
+        '<span class="cover-platform">'+esc(p.platform)+' · '+esc(e.draftStage)+'</span>'+
+        '<h3>'+esc(c.title)+'</h3><p>'+esc(c.subtitle)+'</p>'+
+        '<span class="cover-action">'+esc(e.openStory)+'</span></div></div>'+
+    '</a></article>';
 }
 export function renderHome(lang,projects,t,helpers){
   const e=editorial[lang],u=e.shop,{esc,icon,link,card}=helpers;
   const published=projects.filter(p=>p.featured).slice(0,6);
   return '<main id="main" class="arcade-home"><div class="site-shell">'+
-    '<section class="home-heading" aria-labelledby="home-title"><div><span class="section-kicker">'+esc(u.masthead)+'</span>'+
-    '<h1 id="home-title">'+esc(u.homeTitle)+'</h1><p>'+esc(u.homeSubtitle)+'</p></div></section>'+
+    '<header class="home-heading"><div><span class="section-kicker">'+esc(u.masthead)+'</span><h1 id="home-title">'+esc(u.homeTitle)+'</h1></div><p>'+esc(u.homeSubtitle)+'</p></header>'+
     '<section class="featured-gallery" aria-labelledby="gallery-title"><div class="section-line">'+
       '<h2 id="gallery-title">'+esc(u.featureTitle)+'</h2>'+
       '<span class="section-aside">'+esc(u.featureNote)+'</span></div>'+
@@ -36,13 +34,13 @@ export function renderHome(lang,projects,t,helpers){
       '<p class="art-disclaimer">'+icon('info')+esc(e.artLabel)+'</p></section>'+
     '<section class="shop-directory" aria-labelledby="directory-title"><div class="section-line">'+
       '<h2 id="directory-title">'+esc(u.browseTitle)+'</h2>'+
-      '<a class="section-all" href="'+esc(link(lang,'catalog'))+'">'+esc(e.exploreAll)+' '+icon('arrow')+'</a></div>'+
+      '<a class="section-all" href="'+esc(link(lang,'catalog'))+'">'+esc(e.exploreAll)+'</a></div>'+
       renderCategoryShelf(lang,t,helpers)+'</section>'+
     (published.length?
       '<section class="release-shelf"><div class="section-line"><h2>'+esc(t.home.featuredTitle)+'</h2></div>'+
       '<div class="project-grid">'+published.map(p=>card(p,lang,t)).join('')+'</div></section>':
       '<div class="home-quiet-note"><p>'+esc(u.libraryNote)+'</p>'+
-        '<a href="'+esc(link(lang,'catalog'))+'">'+esc(u.libraryAction)+' '+icon('arrow')+'</a></div>')+
+        '<a href="'+esc(link(lang,'catalog'))+'">'+esc(u.libraryAction)+'</a></div>')+
     '</div></main>';
 }
 
@@ -99,3 +97,4 @@ function renderEchoes(lang,p,t,helpers){
     '</article>'+projectReturn(lang,e,helpers)+'</div></main>';
 }
 export function renderPreview(lang,p,t,helpers){return p.type==='echoes'?renderEchoes(lang,p,t,helpers):renderCrystal(lang,p,t,helpers);}
+
