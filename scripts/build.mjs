@@ -127,7 +127,7 @@ function header(lang,page,slug,t) {
     '<nav class="main-navigation" aria-label="'+esc(u.navigation)+'">'+
       nav.map(([id,sym])=>'<a href="'+esc(link(lang,id))+'" '+(selected(id)?'aria-current="page"':'')+'>'+esc(t.nav[id])+'</a>').join('')+
     '</nav><div class="header-tools">'+
-      '<a class="header-search" href="'+esc(link(lang,'catalog'))+'" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+
+      '<a class="header-search" href="'+esc(link(lang,'catalog'))+'#catalog-search" aria-label="'+esc(t.ui.searchLabel)+'">'+icon('search')+
         '<span>'+esc(t.ui.searchPlaceholder)+'</span></a>'+
       '<button class="icon-action theme-switch" type="button" data-theme-toggle aria-label="'+esc(t.ui.theme)+'" title="'+esc(t.ui.theme)+'"><span class="theme-sun">'+icon('sun')+'</span><span class="theme-moon">'+icon('moon')+'</span></button>'+
       '<button class="icon-action sound-switch" type="button" data-sound-toggle aria-pressed="false" aria-label="'+esc(e.soundEnable)+'" title="'+esc(e.soundEnable)+'" data-sound-on-label="'+esc(e.soundDisable)+'" data-sound-off-label="'+esc(e.soundEnable)+'"><span class="sound-on">'+icon('sound')+'</span><span class="sound-off">'+icon('mute')+'</span></button>'+
